@@ -1,0 +1,79 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 30
+    defaultConfig {
+        applicationId "com.project.taskmanager"
+        minSdkVersion 19
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:support-v4:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+
+    // butter knife
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    //butter knife
+
+    // RecyclerView
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+
+    implementation 'com.android.support:cardview-v7:28.0.0-alpha1'
+
+    //room
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
+
+    //circular image with letter
+    implementation 'com.github.ivbaranov:materiallettericon:0.2.3'
+
+
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
+
+    implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
+
+    implementation 'com.github.PhilJay:MPAndroidChart:v2.2.4'
+
+    /* implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'*/
+
+    /* implementation 'com.github.scrounger:countrycurrencypicker:1.1.1'*/
+
+    //circular imageView
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
+
+    implementation "commons-io:commons-io:2.8.0"
+
+    //gson library
+    compile 'com.google.code.gson:gson:2.8.4'
+
+    implementation 'com.yinglan.shadowimageview:shadowimageview:1.0.4'
+
+    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
+
+    implementation 'com.balysv:material-ripple:1.0.2'
+
+
+    compile 'com.github.midorikocak:currency-picker-android:1.1.9'
+
+    compile 'com.github.f0ris.sweetalert:library:1.5.1'
+
+}

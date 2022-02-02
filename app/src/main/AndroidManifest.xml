@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.project.taskmanager">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/app_icon"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:replace="android:allowBackup,android:icon">
+        <activity android:name="com.project.taskmanager.activities.SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.project.taskmanager.activities.WalletActivity" />
+        <activity android:name="com.project.taskmanager.activities.LoginActivity" />
+        <activity android:name="com.project.taskmanager.activities.ConfirmPinActivity" />
+        <activity android:name="com.project.taskmanager.activities.HomeActivity" />
+        <activity android:name="com.project.taskmanager.activities.BaseActivity" />
+        <activity android:name="com.project.taskmanager.activities.ExpenseHistoryActivity" />
+        <activity android:name="com.project.taskmanager.activities.CurrencyActivity" />
+        <activity
+            android:name="com.project.taskmanager.activities.DemoActivity"
+            android:label="@string/title_activity_demo"
+            android:theme="@style/AppTheme" />
+        <activity android:name="com.project.taskmanager.activities.PrivacyPolicyActivity" />
+        <activity android:name="com.project.taskmanager.activities.ForgotPinActivity"></activity>
+    </application>
+
+</manifest>
