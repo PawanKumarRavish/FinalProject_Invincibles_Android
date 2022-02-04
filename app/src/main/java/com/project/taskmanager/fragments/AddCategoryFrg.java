@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.project.taskmanager.R;
 import com.project.taskmanager.Utils;
 import com.project.taskmanager.databasehelper.DbHelper;
+import com.project.taskmanager.models.AddCategoryModel;
 import com.project.taskmanager.models.ModeModel;
 
 import java.util.ArrayList;
@@ -45,6 +46,8 @@ public class AddCategoryFrg extends BaseFragment {
 
     DbHelper dbHelper;
 
+    AddCategoryModel obj;
+
 
     private static AddCategoryFrg mInstance;
 
@@ -74,6 +77,7 @@ public class AddCategoryFrg extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         dbHelper=new DbHelper(getActivity());
+
 
 
         msSaveBtn.setOnClickListener(new View.OnClickListener() {

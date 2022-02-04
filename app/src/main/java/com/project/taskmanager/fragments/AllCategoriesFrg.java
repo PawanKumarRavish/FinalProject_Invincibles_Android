@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.Nullable;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,10 +17,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.ivbaranov.mli.MaterialLetterIcon;
 import com.project.taskmanager.R;
@@ -72,6 +77,8 @@ public class AllCategoriesFrg extends BaseFragment {
     Unbinder unbinder;
 
     DbHelper dbHelper;
+
+    BottomSheetDialog editDialog;
 
     private static final Random RANDOM = new Random();
 
@@ -158,6 +165,42 @@ public class AllCategoriesFrg extends BaseFragment {
     }
 
 
+    private void editCategory(AddCategoryModel addCategoryModel) {
+
+        View view = getLayoutInflater().inflate(R.layout.edit_category_layout, null);
+
+        EditText mCategoryNameEt = (EditText) view.findViewById(R.id.mCategoryNameEt);
+        EditText mDescriptionEt = (EditText) view.findViewById(R.id.description_et);
+
+        mCategoryNameEt.setText(addCategoryModel.getCategoryName());
+        mDescriptionEt.setText(addCategoryModel.getCategoryDescription());
+
+
+        Button mSaveBtn=(Button)view.findViewById(R.id.saveBtn);
+        mSaveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCategoryNameEt.getText().toString().trim().isEmpty()){
+                    Toast.makeText(getActivity(), "Category Name should not be empty", Toast.LENGTH_LONG).show();
+                } else if (mDescriptionEt.getText().toString().length() == 0) {
+                    Toast.makeText(getActivity(), "Description should not be empty", Toast.LENGTH_LONG).show();
+                }else{
+                    dbHelper.updateCategory(addCategoryModel,mCategoryNameEt.getText().toString().trim(),mDescriptionEt.getText().toString().trim());
+                    editDialog.dismiss();
+                    getAllCategories();
+                }
+            }
+        });
+
+
+        editDialog = new BottomSheetDialog(getActivity());
+        editDialog.setContentView(view);
+        editDialog.show();
+
+
+    }
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -200,7 +243,7 @@ public class AllCategoriesFrg extends BaseFragment {
 
         @Override
         public void onBindViewHolder(final MyViewHolder holder, final int position) {
-            final AddCategoryModel ledger = childFeedList.get(position);
+             AddCategoryModel ledger = childFeedList.get(position);
             holder.mAccountNameTv.setText(ledger.getCategoryName());
             holder.mDescTv.setText(ledger.getCategoryDescription());
 
@@ -212,33 +255,20 @@ public class AllCategoriesFrg extends BaseFragment {
             holder.mIcon.setShapeColor(mMaterialColors[RANDOM.nextInt(mMaterialColors.length)]);
 
 
-            /*holder.mDeleteTv.setOnClickListener(new View.OnClickListener() {
+            holder.mDeleteTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    deleteSelectedRow(ledger.getFrom(), new iTransactionStatus() {
-                        @Override
-                        public void onSuccess() {
-                            childFeedList.remove(position);
-                            notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onFailure() {
-
-                        }
-                    });
-
-                    //Toast.makeText(getActivity(), "Delete Clicked", Toast.LENGTH_SHORT).show();
+                    dbHelper.deleteCategory(ledger);
+                    getAllCategories();
                 }
             });
 
             holder.mEditTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Toast.makeText(getActivity(), "Edit Clicked", Toast.LENGTH_SHORT).show();
+                    editCategory(ledger);
                 }
-            });*/
+            });
 
 
         }

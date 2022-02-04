@@ -592,7 +592,7 @@ public class AddIncomeFrg extends BaseFragment {
                     mFromTv.setText(addAccount.getAccountName());
                     notifyDataSetChanged();
                     dialog.dismiss();
-                    //  sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    //sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
 
                 }

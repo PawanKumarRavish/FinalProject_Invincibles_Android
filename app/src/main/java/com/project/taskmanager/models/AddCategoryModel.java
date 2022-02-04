@@ -1,6 +1,9 @@
 package com.project.taskmanager.models;
 
-public class AddCategoryModel {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class AddCategoryModel implements Parcelable {
 
     private int id;
     private String categoryName;
@@ -32,6 +35,25 @@ public class AddCategoryModel {
     public AddCategoryModel() {
     }
 
+    protected AddCategoryModel(Parcel in) {
+        id = in.readInt();
+        categoryName = in.readString();
+        categoryDescription = in.readString();
+        timestamp = in.readString();
+    }
+
+    public static final Creator<AddCategoryModel> CREATOR = new Creator<AddCategoryModel>() {
+        @Override
+        public AddCategoryModel createFromParcel(Parcel in) {
+            return new AddCategoryModel(in);
+        }
+
+        @Override
+        public AddCategoryModel[] newArray(int size) {
+            return new AddCategoryModel[size];
+        }
+    };
+
     public int getId() {
         return id;
     }
@@ -62,5 +84,18 @@ public class AddCategoryModel {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(categoryName);
+        dest.writeString(categoryDescription);
+        dest.writeString(timestamp);
     }
 }

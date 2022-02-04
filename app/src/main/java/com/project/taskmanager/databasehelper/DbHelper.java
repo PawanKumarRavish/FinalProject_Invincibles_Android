@@ -101,4 +101,22 @@ public class DbHelper extends SQLiteOpenHelper {
         return notes;
     }
 
+    public void deleteCategory(AddCategoryModel note) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(AddCategoryModel.TABLE_NAME, AddCategoryModel.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(note.getId())});
+        db.close();
+    }
+
+
+    public int updateCategory(AddCategoryModel note,String categoryName,String description) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(AddCategoryModel.COLUMN_CATEGORY_NAME, categoryName);
+        values.put(AddCategoryModel.COLUMN_CATEGORY_DESCRIPTION, description);
+        // updating row
+        return db.update(AddCategoryModel.TABLE_NAME, values, AddCategoryModel.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(note.getId())});
+    }
+
 }
