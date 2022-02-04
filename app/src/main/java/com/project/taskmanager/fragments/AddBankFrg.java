@@ -1,7 +1,7 @@
 package com.project.taskmanager.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,7 +87,7 @@ public class AddBankFrg extends BaseFragment {
                         homeInteractiveListener.toAddIncome(AddIncomeFrg.getInstance());
                     }
                     else{
-                        homeInteractiveListener.toAddExpense(AddExpenseFrg.getInstance());
+                        homeInteractiveListener.toAddCategory(AddCategoryFrg.getInstance());
                     }
                     //homeInteractiveListener.toHome(HomeFragment.getInstance());
                 }

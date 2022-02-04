@@ -5,11 +5,11 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -174,7 +174,7 @@ public class AddAccountFrg extends BaseFragment {
                     homeInteractiveListener.toAddIncome(AddIncomeFrg.getInstance());
                 }
                 else{
-                    homeInteractiveListener.toAddExpense(AddExpenseFrg.getInstance());
+                    homeInteractiveListener.toAddCategory(AddCategoryFrg.getInstance());
                 }
             }
 

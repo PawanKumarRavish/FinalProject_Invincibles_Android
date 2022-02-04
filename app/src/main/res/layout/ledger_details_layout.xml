@@ -59,11 +59,11 @@
                 android:gravity="center"
                 android:padding="5dp">
 
-                <android.support.v4.view.ViewPager
+                <androidx.viewpager.widget.ViewPager
                     android:layout_width="match_parent"
                     android:layout_height="60dp">
 
-                </android.support.v4.view.ViewPager>
+                </androidx.viewpager.widget.ViewPager>
 
             </LinearLayout>
 
@@ -92,13 +92,13 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:gravity="center"/>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:layout_marginTop="@dimen/label_margin_top"
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
 
         </LinearLayout>
 

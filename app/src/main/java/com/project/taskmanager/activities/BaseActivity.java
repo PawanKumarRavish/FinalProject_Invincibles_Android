@@ -1,9 +1,9 @@
 package com.project.taskmanager.activities;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -108,7 +108,7 @@ public class BaseActivity extends AppCompatActivity implements HomeInteractiveLi
     }
 
     @Override
-    public void toAddExpense(Fragment frg) {
+    public void toAddCategory(Fragment frg) {
         doFragmentTransition(R.id.frame_container, frg, getSupportFragmentManager(), true);
     }
 

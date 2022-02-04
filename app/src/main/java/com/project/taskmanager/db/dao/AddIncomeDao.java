@@ -1,12 +1,12 @@
 package com.project.taskmanager.db.dao;
 
-import android.arch.persistence.db.SupportSQLiteQuery;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.RawQuery;
-import android.arch.persistence.room.Update;
+import androidx.sqlite.db.SupportSQLiteQuery;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.RawQuery;
+import androidx.room.Update;
 
 import com.project.taskmanager.db.entities.AddIncome;
 

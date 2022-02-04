@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -41,7 +41,7 @@
                 android:id="@+id/mToolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Expense Manager"
+                android:text="@string/app_heading"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
 
@@ -63,6 +63,7 @@
 
 
                 <ImageView
+                    android:visibility="gone"
                     android:id="@+id/optionsMenu"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
@@ -73,55 +74,38 @@
             </LinearLayout>
         </LinearLayout>
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
-
-
-    <FrameLayout
-        android:layout_weight="1"
-        android:id="@+id/frame_container"
+    <LinearLayout
+        android:orientation="vertical"
+        android:weightSum="2"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_height="match_parent">
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/mTablayout"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_gravity="bottom"
-        android:background="#8AD1D3D4"
-        app:tabGravity="fill"
-        app:tabMaxWidth="0dp"
-        app:tabIndicatorColor="@color/colorPrimaryDark"
-        app:tabSelectedTextColor="#006837 "
-        app:tabTextAppearance="@style/TabLayoutStyle"
-        app:tabPaddingTop="5dp"
-        app:tabTextColor="@android:color/black">
+        <FrameLayout
+            android:layout_weight="1.8"
+            android:id="@+id/frame_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <android.support.design.widget.TabItem
-            android:id="@+id/home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <android.support.design.widget.TabItem
-            android:id="@+id/reports"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/mBottomNavView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            app:menu="@menu/bottom_nav"
+            android:background="@android:color/white"
+            app:labelVisibilityMode="labeled"/>
 
 
-        <android.support.design.widget.TabItem
-            android:id="@+id/ledger"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 
-        <android.support.design.widget.TabItem
-            android:id="@+id/profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
 
-    </android.support.design.widget.TabLayout>
+
+
 
 
 </LinearLayout>

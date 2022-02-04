@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -74,7 +74,7 @@
             </LinearLayout>
         </LinearLayout>
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
 
 
@@ -84,7 +84,7 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
@@ -354,7 +354,7 @@
                 </LinearLayout>
 
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
@@ -395,11 +395,12 @@
             </LinearLayout>
 
 
-        </android.support.design.widget.CoordinatorLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     </ScrollView>
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
+        android:visibility="gone"
         android:id="@+id/mTablayout"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -413,30 +414,30 @@
         app:tabPaddingTop="5dp"
         app:tabTextColor="@android:color/black">
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/reports"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/ledger"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
 
-    </android.support.design.widget.TabLayout>
+    </com.google.android.material.tabs.TabLayout>
 
 
 </LinearLayout>

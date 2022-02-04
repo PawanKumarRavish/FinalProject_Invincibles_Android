@@ -2,9 +2,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#f4f2f2">
 
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -28,169 +29,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:text="Amount"
+                    android:text="@string/category_name"
                     android:textSize="14sp" />
 
                 <EditText
                     android:fontFamily="@font/helvetica_condensed_bold"
-                    android:id="@+id/amount_et"
+                    android:id="@+id/mCategoryNameEt"
                     android:textSize="20sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:inputType="number"
-                    android:maxLength="10"
+                    android:inputType="text"
                     android:singleLine="true" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/field_margin_top"
-                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="Date"
-                    android:textSize="14sp" />
-
-                <RelativeLayout
-                    android:id="@+id/dateLayout"
-                    android:layout_marginTop="7dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:hint="DD/MM/YYYY"
-                        android:id="@+id/date_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:textColor="#000"
-                        android:textSize="16sp" />
-
-
-                    <View
-                        android:layout_marginTop="22dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="#7e7e7e" />
-
-                </RelativeLayout>
-
-                <!--<EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:inputType="number"
-                    android:maxLength="20" />-->
-
-            </LinearLayout>
-
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/field_margin_top"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="To"
-                    android:textSize="14sp" />
-
-
-                <RelativeLayout
-                    android:id="@+id/toLayout"
-                    android:layout_marginTop="7dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:fontFamily="@font/helvetica"
-                        android:id="@+id/to_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:textColor="#000"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:id="@+id/fromImage"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_arrow" />
-
-                    <View
-                        android:layout_marginTop="22dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="#7e7e7e" />
-
-                </RelativeLayout>
-
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/field_margin_top"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="Mode"
-                    android:textSize="14sp" />
-
-                <RelativeLayout
-                    android:id="@+id/modeLayout"
-                    android:layout_marginTop="7dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:fontFamily="@font/helvetica"
-                        android:id="@+id/mode_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:textColor="#000"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:id="@+id/modeImage"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/ic_arrow" />
-
-                    <View
-                        android:layout_marginTop="22dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="#7e7e7e" />
-
-                </RelativeLayout>
-
-                <!--<EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:inputType="number"
-                    android:maxLength="20" />-->
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -234,79 +88,6 @@
 
 
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:orientation="vertical"
-        app:behavior_hideable="true"
-        app:behavior_peekHeight="0dp"
-        android:id="@+id/bottom_sheet"
-        android:background="@android:color/white"
-        app:layout_behavior="@string/bottom_sheet_behavior">
-
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:paddingBottom="7dp"
-            android:paddingTop="7dp"
-            android:paddingLeft="7dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
-
-            <TextView
-                android:alpha="0.5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="start"
-                android:text="Select Account"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
-
-            <View
-                android:visibility="gone"
-                android:background="#010101"
-                android:layout_width="match_parent"
-                android:layout_height="1dp">
-
-            </View>
-
-
-        </LinearLayout>
-
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp" />
-        <LinearLayout
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-
-                android:id="@+id/addAcountBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_top_submit_btn"
-                android:background="@drawable/button_bg"
-                android:text="Add Account"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFFFF"
-                android:textSize="@dimen/loginButton_textsize" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </ScrollView>

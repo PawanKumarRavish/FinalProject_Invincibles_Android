@@ -1,6 +1,6 @@
 package com.project.taskmanager.interfaces;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,7 +28,7 @@ public interface HomeInteractiveListener {
     void toHome(Fragment frg);
     void toAddIncome(Fragment frg);
     void toAddAccount(Fragment frg);
-    void toAddExpense(Fragment frg);
+    void toAddCategory(Fragment frg);
     void toLedgerFrg(Fragment frg);
     void toLedgerDetails(Fragment frg);
     void toDemo(Fragment frg);
