@@ -5,15 +5,16 @@
       <map>
         <entry key="..\:/Android- Sem 2/FinalProject_Invincibles_Android/app/src/main/res/layout/activity_confirm_pin.xml" value="0.25416666666666665" />
         <entry key="..\:/Android- Sem 2/FinalProject_Invincibles_Android/app/src/main/res/layout/activity_login.xml" value="0.1793478260869565" />
+        <entry key="app/src/main/res/drawable/ic_stop.xml" value="0.31145833333333334" />
         <entry key="app/src/main/res/layout/activity_currency.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/activity_home.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/activity_home.xml" value="0.18020833333333333" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.18020833333333333" />
+        <entry key="app/src/main/res/layout/activity_record_audio.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/add_expense_layout.xml" value="0.165" />
-        <entry key="app/src/main/res/layout/add_income_layout.xml" value="0.25" />
         <entry key="app/src/main/res/layout/demo2_layout.xml" value="0.18020833333333333" />
         <entry key="app/src/main/res/layout/edit_category_layout.xml" value="0.25" />
         <entry key="app/src/main/res/layout/edit_profile_layout.xml" value="0.18020833333333333" />
-        <entry key="app/src/main/res/layout/home_fragment_layout.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/home_fragment_layout.xml" value="0.25" />
         <entry key="app/src/main/res/layout/ledger_layout.xml" value="0.165" />
         <entry key="app/src/main/res/layout/ledger_list_design.xml" value="0.165" />
         <entry key="app/src/main/res/layout/splash_screen.xml" value="0.165" />
