@@ -53,7 +53,7 @@ import butterknife.Unbinder;
  * Created by admin on 05/03/2019.
  */
 
-public class AddIncomeFrg extends BaseFragment {
+public class AddTaskFrg extends BaseFragment {
 
     BottomSheetBehavior sheetBehavior;
     BottomSheetDialog dialog;
@@ -62,15 +62,6 @@ public class AddIncomeFrg extends BaseFragment {
     private static final Random RANDOM = new Random();
 
     int accountId, amountToSend, amountToSendInNegative;
-
-    @BindView(R.id.dateLayout)
-    RelativeLayout mDateLayout;
-
-    @BindView(R.id.fromLayout)
-    RelativeLayout mFromLayout;
-
-    @BindView(R.id.modeLayout)
-    RelativeLayout mModeLayout;
 
     @BindView(R.id.bottom_sheet)
     LinearLayout bottomSheet;
@@ -82,11 +73,7 @@ public class AddIncomeFrg extends BaseFragment {
     Dialog alertDialog2;
     ModeAdapter modeAdapter;
 
-    @BindView(R.id.fromImage)
-    ImageView mFromImage;
 
-    @BindView(R.id.modeImage)
-    ImageView mModeImage;
 
     @BindView(R.id.noDataFound_tv)
     TextView mNoDataFoundTv;
@@ -101,36 +88,29 @@ public class AddIncomeFrg extends BaseFragment {
     @BindView(R.id.saveBtn)
     Button mSaveBtn;
 
-    @BindView(R.id.addAcountBtn)
-    Button mAddAcountBtn;
 
     Unbinder unbinder;
 
-    @BindView(R.id.amount_et)
-    EditText mAmountEt;
-
     @BindView(R.id.date_tv)
-    TextView mDateTv;
+    TextView mDueDateTv;
 
-    @BindView(R.id.from_tv)
-    TextView mFromTv;
+    @BindView(R.id.dateLayout)
+    TextView mDueDateRl;
 
-    @BindView(R.id.mode_tv)
-    TextView mModeTv;
 
     @BindView(R.id.description_et)
     EditText mDescriptionEt;
 
-    private static AddIncomeFrg mInstance;
+    private static AddTaskFrg mInstance;
 
-    public static AddIncomeFrg getInstance() {
+    public static AddTaskFrg getInstance() {
         if (Utils.isSingelton) {
             mInstance = null;
-            mInstance = new AddIncomeFrg();
+            mInstance = new AddTaskFrg();
             return mInstance;
         }
         if (mInstance == null) {
-            mInstance = new AddIncomeFrg();
+            mInstance = new AddTaskFrg();
         }
 
         return mInstance;
@@ -156,7 +136,6 @@ public class AddIncomeFrg extends BaseFragment {
         sheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mMaterialColors = getActivity().getResources().getIntArray(R.array.colors);
 
-        getAllAccountsList();
 
         modeList = SharedPreference.getBankAndModeList();
         setModeAdapter();
@@ -170,7 +149,7 @@ public class AddIncomeFrg extends BaseFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
-        mDateLayout.setOnClickListener(new View.OnClickListener() {
+        mDueDateRl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Utils.hideKeyboard(getActivity());
@@ -193,14 +172,14 @@ public class AddIncomeFrg extends BaseFragment {
                                 month = Integer.parseInt(fmonth) + 1;
                                 fDate = "0" + dayOfMonth;
                                 String paddedMonth = String.format("%02d", month);
-                                mDateTv.setText(fDate + "-" + paddedMonth + "-" + year);
+                                mDueDateTv.setText(fDate + "-" + paddedMonth + "-" + year);
 
                             } else {
 
                                 fmonth = "0" + monthOfYear;
                                 month = Integer.parseInt(fmonth) + 1;
                                 String paddedMonth = String.format("%02d", month);
-                                mDateTv.setText(dayOfMonth + "-" + paddedMonth + "-" + year);
+                                mDueDateTv.setText(dayOfMonth + "-" + paddedMonth + "-" + year);
                             }
 
                         } catch (Exception e) {
@@ -226,170 +205,14 @@ public class AddIncomeFrg extends BaseFragment {
         mSaveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAmountEt.getText().toString().length() == 0) {
-                    Toast.makeText(getActivity(), "Amount should not be empty", Toast.LENGTH_LONG).show();
-                }
-                else if(Integer.parseInt(mAmountEt.getText().toString())==0){
-                    Toast.makeText(getActivity(), "Amount should not be zero", Toast.LENGTH_LONG).show();
-                }
-                else if (mDateTv.getText().toString().length() == 0) {
-                    Toast.makeText(getActivity(), "Date should  be assigned", Toast.LENGTH_LONG).show();
-                } else if (mFromTv.getText().toString().length() == 0) {
-                    Toast.makeText(getActivity(), "From should not be empty", Toast.LENGTH_LONG).show();
-                } else if (mModeTv.getText().toString().length() == 0) {
-                    Toast.makeText(getActivity(), "Mode should not be empty", Toast.LENGTH_LONG).show();
-                } else if (mDescriptionEt.getText().toString().length() == 0) {
-                    Toast.makeText(getActivity(), "Description should not be empty", Toast.LENGTH_LONG).show();
-                } else {
-                    Utils.hideKeyboard(getActivity());
-                    saveToLedger();
-                    saveToTotalBalance();
-                    saveIncome();
-
-                }
-
-            }
-        });
-
-
-        mAddAcountBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                homeInteractiveListener.toAddAccount(AddAccountFrg.getInstance());
-
-            }
-        });
-
-
-        mFromImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Utils.hideKeyboard(getActivity());
-                dialog.show();
-               /* behavior.setState(BottomSheetBehavior.STATE_EXPANDED);*/
-            }
-        });
-
-        mFromLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Utils.hideKeyboard(getActivity());
-                dialog.show();
 
 
             }
         });
 
-        mModeImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Utils.hideKeyboard(getActivity());
-                dialog1.show();
-                //setModeAdapter();
-            }
-        });
 
-        mModeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Utils.hideKeyboard(getActivity());
-                dialog1.show();
-                //setModeAdapter();
-            }
-        });
     }
 
-    private void saveToTotalBalance() {
-        final int amountToSend = Integer.parseInt(mAmountEt.getText().toString().trim());
-        final int amountToSendInNegative = -amountToSend;
-        class SaveToTotalBalance extends AsyncTask<Void, Void, Void> {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                TotalBalance totalBalance = DatabaseClient.getInstance(getActivity()).getAppDatabase()
-                        .totalBalanceDao()
-                        .findByMode(mModeTv.getText().toString().trim().equalsIgnoreCase(Tags.CASH) ? Tags.CASH : Tags.BANK);
-
-                Log.e("Previous Balance", totalBalance.getAmount() + "");
-
-                // totalBalance.setMode(mModeTv.getText().toString().trim());
-                totalBalance.setAmount(totalBalance.getAmount() + amountToSend);
-                //adding to database
-                DatabaseClient.getInstance(getActivity()).getAppDatabase()
-                        .totalBalanceDao()
-                        .update(totalBalance);
-                Log.e("After Balnce", totalBalance.getAmount() + "");
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                Log.e("Total Balance<>", "Total Balance Saved Successfully");
-            }
-        }
-
-        SaveToTotalBalance saveToTotalBalance = new SaveToTotalBalance();
-        saveToTotalBalance.execute();
-    }
-
-    private void saveToLedger() {
-        amountToSend = Integer.parseInt(mAmountEt.getText().toString().trim());
-        amountToSendInNegative = -amountToSend;
-        class SaveToLedger extends AsyncTask<Void, Void, Void> {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                Ledger ledger = new Ledger(amountToSendInNegative, Utils.toDbTimeStamp(selectedCal.getTime()), mFromTv.getText().toString(), Utils.fetchMode(mModeTv.getText().toString()), mDescriptionEt.getText().toString(), Tags.INCOME, accountId, Utils.getCurrentTimeStamp(), mModeTv.getText().toString().trim());
-
-                //adding to database
-                DatabaseClient.getInstance(getActivity()).getAppDatabase()
-                        .ledgerDao()
-                        .insert(ledger);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                Log.e("Ledger<>", "Ledger Saved Successfully");
-            }
-
-        }
-
-        SaveToLedger saveToLedger= new SaveToLedger();
-        saveToLedger.execute();
-    }
-
-    private void saveIncome() {
-
-        class SaveIncome extends AsyncTask<Void, Void, Void> {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                AddIncome addIncome = new AddIncome(mAmountEt.getText().toString(), Utils.toDbTimeStamp(selectedCal.getTime()), mFromTv.getText().toString(), Utils.fetchMode(mModeTv.getText().toString()), mDescriptionEt.getText().toString(), Tags.INCOME, accountId, Utils.getCurrentTimeStamp(), mModeTv.getText().toString().trim());
-
-                //adding to database
-                DatabaseClient.getInstance(getActivity()).getAppDatabase()
-                        .addIncomeDao()
-                        .insert(addIncome);
-                return null;
-
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                Toast.makeText(getActivity(), "Your income has been saved successfully", Toast.LENGTH_LONG).show();
-                homeInteractiveListener.toHome(HomeFragment.getInstance());
-            }
-        }
-
-        SaveIncome saveIncome = new SaveIncome();
-        saveIncome.execute();
-
-    }
 
     private void setModeAdapter() {
 
@@ -441,72 +264,6 @@ public class AddIncomeFrg extends BaseFragment {
         modeList.add(modeModel);
     }
 
-    private void getAllAccountsList() {
-        class GetAllAccountsList extends AsyncTask<Void, Void, List<AddAccount>> {
-
-            @Override
-            protected List<AddAccount> doInBackground(Void... voids) {
-                List<AddAccount> accountList = DatabaseClient
-                        .getInstance(getActivity())
-                        .getAppDatabase()
-                        .addAccountDao()
-                        .getAll();
-                return accountList;
-            }
-
-            @Override
-            protected void onPostExecute(List<AddAccount> addAccounts) {
-                super.onPostExecute(addAccounts);
-
-
-                View view = getLayoutInflater().inflate(R.layout.demo1_layout, null);
-
-                RecyclerView recyclerVieww = (RecyclerView) view.findViewById(R.id.recyclerVieww);
-                recyclerVieww.setHasFixedSize(true);
-                recyclerVieww.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-                TextView mNoDataFound=(TextView)view.findViewById(R.id.noDataFound_tvv);
-                ImageView mNoDataImg=(ImageView)view.findViewById(R.id.noData_img);
-                LinearLayout mNoDataLl=(LinearLayout) view.findViewById(R.id.noData_ll);
-
-                Button mAddAccountBtn=(Button)view.findViewById(R.id.addAcountBtn);
-                mAddAccountBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Bundle bundle=new Bundle();
-                        bundle.putString("Fragment","INCOME");
-                        AddAccountFrg addAccountFrg=AddAccountFrg.getInstance();
-                        addAccountFrg.setArguments(bundle);
-                        dialog.dismiss();
-                        homeInteractiveListener.toAddAccount(addAccountFrg);
-                    }
-                });
-
-
-
-                if(addAccounts.size() == 0){
-                    mNoDataLl.setVisibility(View.VISIBLE);
-                   /* mNoDataFound.setVisibility(View.VISIBLE);*/
-                    recyclerVieww.setVisibility(View.GONE);
-                }
-                else{
-                    mNoDataLl.setVisibility(View.GONE);
-                    /*mNoDataFound.setVisibility(View.GONE);*/
-                    recyclerVieww.setVisibility(View.VISIBLE);
-                    AccountListAdapter adapter = new AccountListAdapter(getActivity(), addAccounts);
-                    recyclerVieww.setAdapter(adapter);
-                }
-
-                dialog = new BottomSheetDialog(getActivity());
-                dialog.setContentView(view);
-
-
-            }
-        }
-
-        GetAllAccountsList gt=new GetAllAccountsList();
-        gt.execute();
-    }
 
     @Override
     public void onDestroyView() {
@@ -518,7 +275,7 @@ public class AddIncomeFrg extends BaseFragment {
     public void onResume() {
         super.onResume();
         homeInteractiveListener.toggleBackArrowVisiblity(View.VISIBLE);
-        homeInteractiveListener.setToolBarTitle("Add Income");
+        homeInteractiveListener.setToolBarTitle(getString(R.string.add_task));
         homeInteractiveListener.toggleCalenderVisiblity(View.GONE);
         homeInteractiveListener.toggleTabVisiblity(View.GONE);
     }

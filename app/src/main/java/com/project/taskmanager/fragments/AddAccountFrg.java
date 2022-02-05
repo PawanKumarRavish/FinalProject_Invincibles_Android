@@ -171,7 +171,7 @@ public class AddAccountFrg extends BaseFragment {
                 mAccountNameEt.setText("");
 
                 if(fragmentType.equalsIgnoreCase("Income")){
-                    homeInteractiveListener.toAddIncome(AddIncomeFrg.getInstance());
+                    homeInteractiveListener.toAddIncome(AddTaskFrg.getInstance());
                 }
                 else{
                     homeInteractiveListener.toAddCategory(AddCategoryFrg.getInstance());

@@ -115,7 +115,7 @@ public class HomeFragment extends BaseFragment {
         mIncome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                homeInteractiveListener.toAddIncome(AddIncomeFrg.getInstance());
+                homeInteractiveListener.toAddIncome(AddTaskFrg.getInstance());
             }
         });
 
