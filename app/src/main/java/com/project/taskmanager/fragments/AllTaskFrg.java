@@ -136,7 +136,7 @@ public class AllTaskFrg extends BaseFragment {
         super.onResume();
         mSearchEt.setText("");
         homeInteractiveListener.toggleBackArrowVisiblity(View.VISIBLE);
-        homeInteractiveListener.setToolBarTitle(getString(R.string.all_categories));
+        homeInteractiveListener.setToolBarTitle(getString(R.string.all_tasks));
         homeInteractiveListener.toggleCalenderVisiblity(View.GONE);
         homeInteractiveListener.toggleTabVisiblity(View.VISIBLE);
     }
