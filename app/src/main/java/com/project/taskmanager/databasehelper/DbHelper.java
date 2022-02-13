@@ -184,4 +184,17 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public int updateTask(AddTaskModel note,String taskName,String description,String dueDate,String categoryName, int categoryId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(AddTaskModel.COLUMN_TASK_NAME, taskName);
+        values.put(AddTaskModel.COLUMN_TASK_DESCRIPTION, description);
+        values.put(AddTaskModel.COLUMN_TASK_DUEDATE, dueDate);
+        values.put(AddTaskModel.COLUMN_CATEGORY_NAME, categoryName);
+        values.put(AddTaskModel.COLUMN_CATEGORY_ID, categoryId);
+        // updating row
+        return db.update(AddTaskModel.TABLE_NAME, values, AddTaskModel.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(note.getId())});
+    }
+
 }
