@@ -65,7 +65,6 @@ dependencies {
 
     implementation 'com.yinglan.shadowimageview:shadowimageview:1.0.4'
 
-    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
 
     implementation 'com.balysv:material-ripple:1.0.2'
 

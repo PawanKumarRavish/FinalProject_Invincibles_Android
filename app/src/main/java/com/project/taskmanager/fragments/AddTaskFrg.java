@@ -88,6 +88,8 @@ public class AddTaskFrg extends BaseFragment {
     @BindView(R.id.description_et)
     EditText mDescriptionEt;
 
+    int selectedCategoryId=0;
+
     DbHelper dbHelper;
     List<AddCategoryModel> allCategories;
 
@@ -182,7 +184,7 @@ public class AddTaskFrg extends BaseFragment {
                     Toast.makeText(getActivity(), "Please add all the fields", Toast.LENGTH_SHORT).show();
                 }else{
                     long primaryKey = dbHelper.insertTask(mTaskNameTv.getText().toString().trim(), mDescriptionEt.getText().toString().trim(),
-                            mDueDateTv.getText().toString().trim());
+                            mDueDateTv.getText().toString().trim(),mCategoryTv.getText().toString(),selectedCategoryId);
                     Log.e("Key",primaryKey+"");
                     if(primaryKey == -1) {
                         Toast.makeText(getActivity(), "Data is not inserted in database", Toast.LENGTH_SHORT).show();
@@ -280,6 +282,7 @@ public class AddTaskFrg extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     mCategoryTv.setText(ledger.getCategoryName());
+                    selectedCategoryId=ledger.getId();
                     dialog1.dismiss();
                 }
             });

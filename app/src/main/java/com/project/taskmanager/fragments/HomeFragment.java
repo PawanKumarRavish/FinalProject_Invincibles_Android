@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.ivbaranov.mli.MaterialLetterIcon;
 import com.project.taskmanager.R;
 import com.project.taskmanager.SharedPreference;
 import com.project.taskmanager.Utils;
@@ -149,9 +151,15 @@ public class HomeFragment extends BaseFragment {
 
     private void getRecentsTasks() {
         List<AddTaskModel> allTasks = dbHelper.getAllTasks();
+        mCashBalanceTv.setText(allTasks.size()+"");
         if(allTasks.size()>0){
             mNoDataLl.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
+
+            TasksAdapter tasksAdapter=new TasksAdapter(getActivity(),allTasks);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(tasksAdapter);
 
 
         }else{
@@ -186,6 +194,68 @@ public class HomeFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+
+
+
+    //---------------------------lEDGER lIST Adapter------------------------------------//
+    public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.MyViewHolder> {
+
+        Context context;
+        List<AddTaskModel> childFeedList;
+
+
+        public TasksAdapter(Context context, List<AddTaskModel> childFeedList) {
+            this.context = context;
+            this.childFeedList = childFeedList;
+        }
+
+        @Override
+        public TasksAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recent_txn_design, parent, false);
+            return new TasksAdapter.MyViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(TasksAdapter.MyViewHolder holder, final int position) {
+            AddTaskModel childFeedModel = childFeedList.get(position);
+            holder.mTaskNameTv.setText(childFeedModel.getTaskName());
+            holder.mTaskDesTv.setText(childFeedModel.getTaskDescription());
+            holder.mCategoryTv.setText(childFeedModel.getCategoryName());
+
+            holder.mDateTv.setText(Utils.getDayInString(childFeedModel.getTaskDueDate()));
+            String month = Utils.getMonthInString(childFeedModel.getTaskDueDate());
+            holder.mMonthTv.setText(month.substring(0, 3));
+
+        }
+
+
+        @Override
+        public int getItemCount() {
+            return childFeedList.size();
+        }
+
+
+
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+
+            TextView mTaskNameTv,mTaskDesTv,mCategoryTv,mDateTv,mMonthTv;
+
+
+            public MyViewHolder(View itemView) {
+                super(itemView);
+
+                mTaskNameTv = itemView.findViewById(R.id.mTaskNameTv);
+                mTaskDesTv = itemView.findViewById(R.id.mTaskDesTv);
+                mCategoryTv = itemView.findViewById(R.id.mCategoryTv);
+                mDateTv = itemView.findViewById(R.id.mDateTv);
+                mMonthTv = itemView.findViewById(R.id.mMonthTv);
+
+
+            }
+        }
     }
 
 

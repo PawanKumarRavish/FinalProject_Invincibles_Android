@@ -121,7 +121,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public long insertTask(String name,String des,String dueDate) {
+    public long insertTask(String name,String des,String dueDate,String categoryName,int categoryId) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -131,6 +131,8 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(AddTaskModel.COLUMN_TASK_NAME, name);
         values.put(AddTaskModel.COLUMN_TASK_DESCRIPTION, des);
         values.put(AddTaskModel.COLUMN_TASK_DUEDATE, dueDate);
+        values.put(AddTaskModel.COLUMN_CATEGORY_NAME, categoryName);
+        values.put(AddTaskModel.COLUMN_CATEGORY_ID, categoryId);
 
         // insert row
         long id = db.insert(AddTaskModel.TABLE_NAME, null, values);
@@ -160,6 +162,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 note.setTaskName(cursor.getString(cursor.getColumnIndex(AddTaskModel.COLUMN_TASK_NAME)));
                 note.setTaskDescription(cursor.getString(cursor.getColumnIndex(AddTaskModel.COLUMN_TASK_DESCRIPTION)));
                 note.setTaskDueDate(cursor.getString(cursor.getColumnIndex(AddTaskModel.COLUMN_TASK_DUEDATE)));
+                note.setCategoryName(cursor.getString(cursor.getColumnIndex(AddTaskModel.COLUMN_CATEGORY_NAME)));
+                note.setCategoryId(cursor.getInt(cursor.getColumnIndex(AddTaskModel.COLUMN_CATEGORY_ID)));
                 note.setTimestamp(cursor.getString(cursor.getColumnIndex(AddTaskModel.COLUMN_TIMESTAMP)));
 
                 notes.add(note);

@@ -161,8 +161,7 @@ public class ExpenseHistoryActivity extends BaseActivity implements OnChartGestu
                         switch (item.getItemId()) {
 
                             case R.id.privacyPolicy:
-                                startActivity(new Intent(ExpenseHistoryActivity.this,PrivacyPolicyActivity.class));
-                                //finish();
+
                                 return true;
 
                             default:

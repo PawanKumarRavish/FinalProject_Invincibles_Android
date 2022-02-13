@@ -65,7 +65,7 @@ public class Utils {
 
     public static String getDayInString(String date){
         String retVal="";
-        SimpleDateFormat SDF_FULL = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat SDF_FULL = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat SDF_DAY = new SimpleDateFormat("dd");
         try {
             retVal= SDF_DAY.format(SDF_FULL.parse(date));
@@ -78,7 +78,7 @@ public class Utils {
 
     public static String getMonthInString(String date){
         String retVal="";
-        SimpleDateFormat SDF_FULL = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat SDF_FULL = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat SDF_DAY = new SimpleDateFormat("MMM");
         try {
             retVal= SDF_DAY.format(SDF_FULL.parse(date));

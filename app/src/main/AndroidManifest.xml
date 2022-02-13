@@ -37,7 +37,6 @@
             android:name="com.project.taskmanager.activities.DemoActivity"
             android:label="@string/title_activity_demo"
             android:theme="@style/AppTheme" />
-        <activity android:name="com.project.taskmanager.activities.PrivacyPolicyActivity" />
         <activity android:name="com.project.taskmanager.activities.ForgotPinActivity"></activity>
     </application>
 
