@@ -103,6 +103,11 @@ public class BaseActivity extends AppCompatActivity implements HomeInteractiveLi
     }
 
     @Override
+    public void toAddTask(Fragment frg) {
+        doFragmentTransition(R.id.frame_container, frg, getSupportFragmentManager(), true);
+    }
+
+    @Override
     public void toAddAccount(Fragment frg) {
         doFragmentTransition(R.id.frame_container, frg, getSupportFragmentManager(), true);
     }

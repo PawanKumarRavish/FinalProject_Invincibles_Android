@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="start"
-                android:text="Select Mode"
+                android:text="Select Categories"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
@@ -48,7 +48,7 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerVieww"
+            android:id="@+id/mRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginBottom="16dp"
@@ -62,28 +62,6 @@
             android:text="@string/no_data_found"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:gravity="center"/>
-
-        <LinearLayout
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:layout_marginBottom="@dimen/label_margin_top"
-                android:id="@+id/addBankBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_top_submit_btn"
-                android:background="@drawable/button_bg"
-                android:text="Add Bank"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFFFF"
-                android:textSize="@dimen/loginButton_textsize" />
-
-        </LinearLayout>
-
-
 
     </LinearLayout>
 

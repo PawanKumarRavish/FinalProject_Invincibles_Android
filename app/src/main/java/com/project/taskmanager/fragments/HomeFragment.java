@@ -28,6 +28,7 @@ import com.project.taskmanager.db.entities.AddIncome;
 import com.project.taskmanager.db.entities.TotalBalance;
 import com.project.taskmanager.interfaces.Tags;
 import com.project.taskmanager.models.AddCategoryModel;
+import com.project.taskmanager.models.AddTaskModel;
 
 import java.util.List;
 
@@ -115,7 +116,8 @@ public class HomeFragment extends BaseFragment {
         mIncome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                homeInteractiveListener.toAddIncome(AddTaskFrg.getInstance());
+                AddTaskFrg homeFragment=new AddTaskFrg();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, homeFragment).commit();
             }
         });
 
@@ -128,12 +130,9 @@ public class HomeFragment extends BaseFragment {
         });
 
 
-        getRecentTxn();
+        getRecentsTasks();
 
         getTotalCategories();
-
-        getTotalExpenseBalance();
-
 
         mExpenseImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,34 +147,19 @@ public class HomeFragment extends BaseFragment {
 
     }
 
-    private void getTotalExpenseBalance() {
+    private void getRecentsTasks() {
+        List<AddTaskModel> allTasks = dbHelper.getAllTasks();
+        if(allTasks.size()>0){
+            mNoDataLl.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
 
-        class GetTotalExpenseBalance extends AsyncTask<Void, Void, Void> {
-            AddIncome addIncome;
-            int totalExpensebalance;
 
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-                totalExpensebalance = DatabaseClient.getInstance(getActivity()).getAppDatabase()
-                        .addIncomeDao()
-                        .getTotalExpenseBalance(Tags.EXPENSE);
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-
-                mExpenseBalanceTv.setText(SharedPreference.getCurrency() + " " + Utils.getAmountInDecimal(totalExpensebalance + ""));
-
-            }
+        }else{
+            mNoDataLl.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         }
-
-        GetTotalExpenseBalance gb = new GetTotalExpenseBalance();
-        gb.execute();
     }
+
 
     @Override
     public void onResume() {
@@ -191,79 +175,12 @@ public class HomeFragment extends BaseFragment {
         return HomeFragment.class.getSimpleName();
     }
 
-    private void getBankAndCashBalance() {
-
-        class GetBankAndCashBalance extends AsyncTask<Void, Void, List<TotalBalance>> {
-
-            @Override
-            protected List<TotalBalance> doInBackground(Void... voids) {
-                List<TotalBalance> totalBalances = DatabaseClient
-                        .getInstance(getActivity())
-                        .getAppDatabase()
-                        .totalBalanceDao()
-                        .getAll();
-                return totalBalances;
-            }
-
-            @Override
-            protected void onPostExecute(List<TotalBalance> totalBalances) {
-                super.onPostExecute(totalBalances);
-
-                String cashAmount = Utils.getAmountInDecimal(totalBalances.get(0).getAmount() + "");
-                String bankAmount = Utils.getAmountInDecimal(totalBalances.get(1).getAmount() + "");
-
-
-                mCashBalanceTv.setText(SharedPreference.getCurrency() + " " + cashAmount);
-                mBankBalanceTv.setText(SharedPreference.getCurrency() + " " + bankAmount);
-            }
-        }
-
-        GetBankAndCashBalance gb = new GetBankAndCashBalance();
-        gb.execute();
-    }
-
     private void getTotalCategories() {
         List<AddCategoryModel> allCategories = dbHelper.getAllCategories();
         mBankBalanceTv.setText(allCategories.size()+"");
 
     }
 
-    private void getRecentTxn() {
-
-        class GetRecentTxn extends AsyncTask<Void, Void, List<AddIncome>> {
-
-            @Override
-            protected List<AddIncome> doInBackground(Void... voids) {
-                List<AddIncome> incomeList = DatabaseClient
-                        .getInstance(getActivity())
-                        .getAppDatabase()
-                        .addIncomeDao()
-                        .getRecentTxn();
-                return incomeList;
-            }
-
-            @Override
-            protected void onPostExecute(List<AddIncome> addIncomes) {
-                super.onPostExecute(addIncomes);
-                if (addIncomes.size() == 0) {
-                    mNoDataLl.setVisibility(View.VISIBLE);
-                    /* mNoDataFoundTv.setVisibility(View.VISIBLE);*/
-                    recyclerView.setVisibility(View.GONE);
-                } else {
-                    mNoDataLl.setVisibility(View.GONE);
-                    /*  mNoDataFoundTv.setVisibility(View.GONE);*/
-                    recyclerView.setVisibility(View.VISIBLE);
-                    //Toast.makeText(getActivity(), " Got recent Txn successfully", Toast.LENGTH_LONG).show();
-                    RecentTxnAdapter recentTxnAdapter = new RecentTxnAdapter(getActivity(), addIncomes);
-                    recyclerView.setAdapter(recentTxnAdapter);
-                }
-
-            }
-        }
-
-        GetRecentTxn gt = new GetRecentTxn();
-        gt.execute();
-    }
 
     @Override
     public void onDestroyView() {
@@ -271,79 +188,6 @@ public class HomeFragment extends BaseFragment {
         unbinder.unbind();
     }
 
-
-    //---------------------------RecentTxnAdapter------------------------------------//
-    public class RecentTxnAdapter extends RecyclerView.Adapter<RecentTxnAdapter.MyViewHolder> {
-
-        Context context;
-        List<AddIncome> childFeedList;
-        private int lastCheckedPosition = -1;
-
-
-        public RecentTxnAdapter(Context context, List<AddIncome> childFeedList) {
-            this.context = context;
-            this.childFeedList = childFeedList;
-        }
-
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recent_txn_design, parent, false);
-            return new MyViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(MyViewHolder holder, int position) {
-            final AddIncome addIncome = childFeedList.get(position);
-
-            holder.mAccountNameTv.setText(addIncome.getFromm());
-            holder.mDescriptionTv.setText(addIncome.getDescription());
-
-            String amountToShow = Utils.getAmountInDecimal(addIncome.getAmount());
-            //holder.mAmountTv.setText(SharedPreference.getCurrency() + " " + Integer.parseInt(addIncome.getAmount()));
-
-            if (addIncome.getType() == Tags.EXPENSE) {
-                holder.mAmountTv.setTextColor(Color.RED);
-                holder.mAmountTv.setText(SharedPreference.getCurrency() + " " + Integer.parseInt(addIncome.getAmount()));
-            } else if (addIncome.getType() == Tags.INCOME) {
-                holder.mAmountTv.setTextColor(Color.parseColor("#689F38"));
-                holder.mAmountTv.setText(SharedPreference.getCurrency() + " " + Integer.parseInt(addIncome.getAmount()));
-            }
-
-            holder.mDateTv.setText(Utils.getDayInString(addIncome.getDate()));
-            String month = Utils.getMonthInString(addIncome.getDate());
-            holder.mMonthTv.setText(month.substring(0, 3));
-            holder.mModeTv.setText(addIncome.getActualModeName());
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return childFeedList.size();
-        }
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-
-            TextView mAccountNameTv;
-            TextView mDescriptionTv;
-            TextView mAmountTv;
-            TextView mDateTv;
-            TextView mMonthTv;
-            TextView mModeTv;
-
-
-            public MyViewHolder(View itemView) {
-                super(itemView);
-
-                mAccountNameTv = (TextView) itemView.findViewById(R.id.accountName_tv);
-                mDescriptionTv = (TextView) itemView.findViewById(R.id.description_tv);
-                mAmountTv = (TextView) itemView.findViewById(R.id.amount_tv);
-                mDateTv = (TextView) itemView.findViewById(R.id.date_tv);
-                mMonthTv = (TextView) itemView.findViewById(R.id.month_tv);
-                mModeTv = (TextView) itemView.findViewById(R.id.mode_tv);
-
-            }
-        }
-    }
 
 
 }

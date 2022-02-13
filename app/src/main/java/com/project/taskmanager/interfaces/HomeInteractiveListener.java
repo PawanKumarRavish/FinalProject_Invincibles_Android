@@ -27,8 +27,8 @@ public interface HomeInteractiveListener {
 
     void toHome(Fragment frg);
     void toAddIncome(Fragment frg);
+    void toAddTask(Fragment frg);
     void toAddAccount(Fragment frg);
-    void toAddCategory(Fragment frg);
     void toLedgerFrg(Fragment frg);
     void toLedgerDetails(Fragment frg);
     void toDemo(Fragment frg);
@@ -36,6 +36,7 @@ public interface HomeInteractiveListener {
     void toProfile(Fragment frg);
     void toReports(Fragment frg);
     void toAddBankFrg(Fragment frg);
+    void toAddCategory(Fragment frg);
 
 
 }

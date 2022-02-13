@@ -84,7 +84,7 @@ public class AddBankFrg extends BaseFragment {
                     Toast.makeText(getActivity(), "Bank Saved Successfully", Toast.LENGTH_SHORT).show();
 
                     if(fragmentType.equalsIgnoreCase("Income")){
-                        homeInteractiveListener.toAddIncome(AddTaskFrg.getInstance());
+                        //homeInteractiveListener.toAddIncome(AddTaskFrg.getInstance());
                     }
                     else{
                         homeInteractiveListener.toAddCategory(AddCategoryFrg.getInstance());

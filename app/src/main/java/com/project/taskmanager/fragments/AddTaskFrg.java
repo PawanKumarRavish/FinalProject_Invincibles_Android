@@ -3,47 +3,35 @@ package com.project.taskmanager.fragments;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.ivbaranov.mli.MaterialLetterIcon;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.project.taskmanager.R;
-import com.project.taskmanager.SharedPreference;
 import com.project.taskmanager.Utils;
-import com.project.taskmanager.db.DatabaseClient;
-import com.project.taskmanager.db.entities.AddAccount;
-import com.project.taskmanager.db.entities.AddIncome;
-import com.project.taskmanager.db.entities.Ledger;
-import com.project.taskmanager.db.entities.TotalBalance;
-import com.project.taskmanager.interfaces.Tags;
+import com.project.taskmanager.databasehelper.DbHelper;
+import com.project.taskmanager.models.AddCategoryModel;
 import com.project.taskmanager.models.ModeModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,12 +44,16 @@ import butterknife.Unbinder;
 public class AddTaskFrg extends BaseFragment {
 
     BottomSheetBehavior sheetBehavior;
-    BottomSheetDialog dialog;
     BottomSheetDialog dialog1;
-    private int[] mMaterialColors;
-    private static final Random RANDOM = new Random();
 
-    int accountId, amountToSend, amountToSendInNegative;
+    @BindView(R.id.mTaskNameTv)
+    EditText mTaskNameTv;
+
+    @BindView(R.id.mCategoryTv)
+    TextView mCategoryTv;
+
+    @BindView(R.id.mCategoryLayout)
+    RelativeLayout mCategoryLayout;
 
     @BindView(R.id.bottom_sheet)
     LinearLayout bottomSheet;
@@ -71,18 +63,13 @@ public class AddTaskFrg extends BaseFragment {
     ArrayList<ModeModel> modeList;
     Dialog alertDialog;
     Dialog alertDialog2;
-    ModeAdapter modeAdapter;
-
+    CategoriesAdapter categoriesAdapter;
 
 
     @BindView(R.id.noDataFound_tv)
     TextView mNoDataFoundTv;
 
     private int mYear, mMonth, mDay;
-
-    BottomSheetBehavior behavior;
-
-    RecyclerView recyclerView;
     CoordinatorLayout coordinatorLayout;
 
     @BindView(R.id.saveBtn)
@@ -95,31 +82,20 @@ public class AddTaskFrg extends BaseFragment {
     TextView mDueDateTv;
 
     @BindView(R.id.dateLayout)
-    TextView mDueDateRl;
+    RelativeLayout mDueDateRl;
 
 
     @BindView(R.id.description_et)
     EditText mDescriptionEt;
 
-    private static AddTaskFrg mInstance;
+    DbHelper dbHelper;
+    List<AddCategoryModel> allCategories;
 
-    public static AddTaskFrg getInstance() {
-        if (Utils.isSingelton) {
-            mInstance = null;
-            mInstance = new AddTaskFrg();
-            return mInstance;
-        }
-        if (mInstance == null) {
-            mInstance = new AddTaskFrg();
-        }
-
-        return mInstance;
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.add_income_layout, null);
+        View view = inflater.inflate(R.layout.add_task_layout, null);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
@@ -128,25 +104,20 @@ public class AddTaskFrg extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        dbHelper = new DbHelper(getActivity());
+
+        allCategories = dbHelper.getAllCategories();
+
         modeList = new ArrayList<>();
 
         alertDialog = new Dialog(getActivity());
         alertDialog2 = new Dialog(getActivity());
 
         sheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        mMaterialColors = getActivity().getResources().getIntArray(R.array.colors);
 
-
-        modeList = SharedPreference.getBankAndModeList();
-        setModeAdapter();
+        setCategoriesAdapter(allCategories);
 
         coordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinatorLayout);
-
-
-
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
         mDueDateRl.setOnClickListener(new View.OnClickListener() {
@@ -162,6 +133,7 @@ public class AddTaskFrg extends BaseFragment {
                 final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     String fmonth, fDate;
                     int month;
+
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
@@ -187,9 +159,7 @@ public class AddTaskFrg extends BaseFragment {
                         }
 
 
-
-
-                       // mDateTv.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                        // mDateTv.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                         selectedCal = Calendar.getInstance();
                         selectedCal.set(Calendar.YEAR, year);
                         selectedCal.set(Calendar.MONTH, monthOfYear);
@@ -205,8 +175,34 @@ public class AddTaskFrg extends BaseFragment {
         mSaveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(mTaskNameTv.getText().toString().trim().isEmpty()
+                ||mDescriptionEt.getText().toString().trim().isEmpty()
+                || mDueDateTv.getText().toString().trim().isEmpty()
+                ||mCategoryTv.getText().toString().trim().isEmpty()){
+                    Toast.makeText(getActivity(), "Please add all the fields", Toast.LENGTH_SHORT).show();
+                }else{
+                    long primaryKey = dbHelper.insertTask(mTaskNameTv.getText().toString().trim(), mDescriptionEt.getText().toString().trim(),
+                            mDueDateTv.getText().toString().trim());
+                    Log.e("Key",primaryKey+"");
+                    if(primaryKey == -1) {
+                        Toast.makeText(getActivity(), "Data is not inserted in database", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getActivity(), "Data Successfully inserted", Toast.LENGTH_SHORT).show();
+                        HomeFragment homeFragment=new HomeFragment();
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, homeFragment).commit();
+                    }
+                }
 
 
+
+
+            }
+        });
+
+        mCategoryLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog1.show();
             }
         });
 
@@ -214,54 +210,30 @@ public class AddTaskFrg extends BaseFragment {
     }
 
 
-    private void setModeAdapter() {
+    private void setCategoriesAdapter(List<AddCategoryModel> allCategories) {
 
-        View view = getLayoutInflater().inflate(R.layout.demo2_layout, null);
+        View view = getLayoutInflater().inflate(R.layout.dialog_catgories, null);
 
-        RecyclerView recyclerVieww = (RecyclerView) view.findViewById(R.id.recyclerVieww);
+        RecyclerView recyclerVieww = (RecyclerView) view.findViewById(R.id.mRecyclerView);
         recyclerVieww.setHasFixedSize(true);
         recyclerVieww.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        TextView mNoDataFound=(TextView)view.findViewById(R.id.noDataFound_tvv);
+        TextView mNoDataFound = (TextView) view.findViewById(R.id.noDataFound_tvv);
 
-        Button mAddBankBtn=(Button)view.findViewById(R.id.addBankBtn);
-        mAddBankBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle=new Bundle();
-                bundle.putString("Fragment","INCOME");
-                AddBankFrg addBankFrg=AddBankFrg.getInstance();
-                addBankFrg.setArguments(bundle);
-                dialog1.dismiss();
-                homeInteractiveListener.toAddBankFrg(addBankFrg);
-            }
-        });
-
-
-
-        if(modeList.size() == 0){
+        if (allCategories.size() == 0) {
             mNoDataFound.setVisibility(View.VISIBLE);
             recyclerVieww.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             mNoDataFound.setVisibility(View.GONE);
             recyclerVieww.setVisibility(View.VISIBLE);
-            modeAdapter = new ModeAdapter(getActivity(), modeList);
-            recyclerVieww.setAdapter(modeAdapter);
+            categoriesAdapter = new CategoriesAdapter(getActivity(), allCategories);
+            recyclerVieww.setAdapter(categoriesAdapter);
         }
 
         dialog1 = new BottomSheetDialog(getActivity());
         dialog1.setContentView(view);
 
 
-    }
-
-    private void prepareModeData() {
-        ModeModel modeModel = new ModeModel("Cash");
-        modeList.add(modeModel);
-
-        modeModel = new ModeModel("Bank (new)");
-        modeList.add(modeModel);
     }
 
 
@@ -281,185 +253,59 @@ public class AddTaskFrg extends BaseFragment {
     }
 
 
-    //---------------------------AccountListAdapter------------------------------------//
-    public class AccountListAdapter extends RecyclerView.Adapter<AccountListAdapter.MyViewHolder> {
+
+    //---------------------------lEDGER lIST Adapter------------------------------------//
+    public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.MyViewHolder> {
 
         Context context;
-        List<AddAccount> childFeedList;
-        private int lastCheckedPosition = -1;
-
-        private SparseBooleanArray selectedItems = new SparseBooleanArray();
+        List<AddCategoryModel> childFeedList;
 
 
-        public AccountListAdapter(Context context, List<AddAccount> childFeedList) {
+        public CategoriesAdapter(Context context, List<AddCategoryModel> childFeedList) {
             this.context = context;
             this.childFeedList = childFeedList;
         }
 
         @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.account_list_design, parent, false);
-            return new MyViewHolder(view);
+        public CategoriesAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_categories_design, parent, false);
+            return new CategoriesAdapter.MyViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final MyViewHolder holder, int position) {
-            final AddAccount addAccount = childFeedList.get(position);
-            holder.mAccountNameTv.setText(addAccount.getAccountName());
-            holder.mRadioButton.setChecked(position == lastCheckedPosition);
-
-
-            holder.mIcon.setInitials(true);
-            holder.mIcon.setShapeType(MaterialLetterIcon.Shape.CIRCLE);
-            holder.mIcon.setLetter(addAccount.getAccountName().substring(0, 1));
-            holder.mIcon.setLetterSize(16);
-            holder.mIcon.setShapeColor(mMaterialColors[RANDOM.nextInt(mMaterialColors.length)]);
-
-            if(lastCheckedPosition==position){
-                holder.mCardView.setBackgroundColor(Color.parseColor("#d3d3d3"));
-                holder.mAccountNameTv.setTextColor(Color.parseColor("#010101"));
-
-               // holder.mRadioButton.setHighlightColor(Color.parseColor("#010101"));
-            }
-            else
-            {
-                holder.mCardView.setBackgroundColor(Color.parseColor("#ffffff"));
-                holder.mAccountNameTv.setTextColor(Color.parseColor("#010101"));
-
-               // holder.mRadioButton.setHighlightColor(Color.parseColor("#010101"));
-            }
-
-
-            holder.mCardView.setOnClickListener(new View.OnClickListener() {
+        public void onBindViewHolder(final CategoriesAdapter.MyViewHolder holder, final int position) {
+            AddCategoryModel ledger = childFeedList.get(position);
+            holder.mCategoryNameTv.setText(ledger.getCategoryName());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    lastCheckedPosition=position;
-                    accountId = addAccount.getId();
-                    mFromTv.setText(addAccount.getAccountName());
-                    notifyDataSetChanged();
-                    dialog.dismiss();
-                    sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-            });
-
-            holder.mRadioButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    lastCheckedPosition = position;
-                    mFromTv.setText(addAccount.getAccountName());
-                    notifyDataSetChanged();
-                    dialog.dismiss();
-                    //sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-
+                    mCategoryTv.setText(ledger.getCategoryName());
+                    dialog1.dismiss();
                 }
             });
 
 
         }
+
 
         @Override
         public int getItemCount() {
             return childFeedList.size();
         }
 
+
+
+
         public class MyViewHolder extends RecyclerView.ViewHolder {
-
-            TextView mAccountNameTv;
-            RadioButton mRadioButton;
-            MaterialLetterIcon mIcon;
-            CardView mCardView;
-
+            TextView mCategoryNameTv;
             public MyViewHolder(View itemView) {
                 super(itemView);
 
-                mAccountNameTv = (TextView) itemView.findViewById(R.id.accountName_tv);
-                mRadioButton = (RadioButton) itemView.findViewById(R.id.radioButton);
-                mIcon = (MaterialLetterIcon) itemView.findViewById(R.id.imageIcon);
-                mCardView=(CardView)itemView.findViewById(R.id.cardView);
-
+                mCategoryNameTv = (TextView) itemView.findViewById(R.id.mCategoryNameTv);
 
             }
         }
     }
 
 
-    //---------------------------Mode Adapter---------------------------------------//
-    public class ModeAdapter extends RecyclerView.Adapter<ModeAdapter.ViewHolder> {
-
-        int selectedItemposition;
-        Context activity;
-        private ArrayList<ModeModel> moviesList;
-        private int lastCheckedPosition = -1;
-
-        public ModeAdapter(Context activity, ArrayList<ModeModel> moviesList) {
-            this.moviesList = moviesList;
-            this.activity = activity;
-
-
-        }
-
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.mode_design_layout, parent, false);
-            return new ViewHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-
-            final ModeModel modeModel = moviesList.get(position);
-            holder.mBankNameTv.setText(modeModel.getModeName());
-
-            holder.mIcon.setInitials(true);
-            holder.mIcon.setShapeType(MaterialLetterIcon.Shape.CIRCLE);
-            holder.mIcon.setLetter(modeModel.getModeName().substring(0, 1));
-            holder.mIcon.setLetterSize(16);
-            holder.mIcon.setShapeColor(mMaterialColors[RANDOM.nextInt(mMaterialColors.length)]);
-
-            if(lastCheckedPosition==position){
-                holder.mCardView.setBackgroundColor(Color.parseColor("#d3d3d3"));
-                holder.mBankNameTv.setTextColor(Color.parseColor("#010101"));
-                //holder.mRadioButton.setHighlightColor(Color.parseColor("#010101"));
-            }
-            else
-            {
-                holder.mCardView.setBackgroundColor(Color.parseColor("#ffffff"));
-                holder.mBankNameTv.setTextColor(Color.parseColor("#010101"));
-                //holder.mRadioButton.setHighlightColor(Color.parseColor("#010101"));
-            }
-
-            holder.mCardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    lastCheckedPosition = position;
-                    mModeTv.setText(modeModel.getModeName());
-                    notifyDataSetChanged();
-                    dialog1.dismiss();
-                }
-            });
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return moviesList == null ? 0 : moviesList.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            MaterialLetterIcon mIcon;
-            CardView mCardView;
-            TextView mBankNameTv;
-
-            public ViewHolder(View convertView) {
-                super(convertView);
-
-                mBankNameTv = (TextView) itemView.findViewById(R.id.bankName_tv);
-                mIcon = (MaterialLetterIcon) itemView.findViewById(R.id.imageIcon);
-                mCardView=(CardView)itemView.findViewById(R.id.cardView);
-            }
-        }
-    }
 }
