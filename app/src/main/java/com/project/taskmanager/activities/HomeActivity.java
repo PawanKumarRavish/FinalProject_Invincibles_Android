@@ -18,6 +18,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.project.taskmanager.R;
 import com.project.taskmanager.fragments.AddCategoryFrg;
 import com.project.taskmanager.fragments.AllCategoriesFrg;
+import com.project.taskmanager.fragments.AllTaskFrg;
 import com.project.taskmanager.fragments.HomeFragment;
 import com.project.taskmanager.fragments.Profile;
 import com.project.taskmanager.models.ModeModel;
@@ -73,7 +74,8 @@ public class HomeActivity extends WalletActivity implements View.OnClickListener
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, ledgerFrg).commit();
 
                 } else if (item.getItemId() == R.id.bottom_alltasks) {
-                    Toast.makeText(HomeActivity.this, "Under Developement", Toast.LENGTH_SHORT).show();
+                    AllTaskFrg allTaskFrg =new AllTaskFrg();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, allTaskFrg).commit();
                 } else if (item.getItemId() == R.id.bottom_profile) {
                     Profile allCategoriesFrg=new Profile();
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, allCategoriesFrg).commit();

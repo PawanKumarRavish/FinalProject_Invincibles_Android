@@ -52,11 +52,8 @@ import static com.project.taskmanager.interfaces.HomeInteractiveListener.LEDGER_
 
 public class AllCategoriesFrg extends BaseFragment {
 
-    List<Ledger> ledgers;
-    ArrayList<Ledger> newList;
+    List<AddCategoryModel> allCategoriesList;
     LedgerAdapter ledgerAdapter;
-
-   /* Ledger ledger,ledger1;*/  // uncomment it for cash ,bank list
 
     RecyclerView recyclerView;
 
@@ -133,9 +130,9 @@ public class AllCategoriesFrg extends BaseFragment {
                     @Override
                     public void afterTextChanged(Editable s) {
                         if (s.length() == 0) {
-                            //ledgerAdapter.filterList(ledgers);
+                            ledgerAdapter.filterList(allCategoriesList);
                         } else {
-                            //((LedgerAdapter)recyclerView.getAdapter()).filter(s.toString());
+                            ((LedgerAdapter)recyclerView.getAdapter()).filter(s.toString());
 
                         }
 
@@ -149,7 +146,7 @@ public class AllCategoriesFrg extends BaseFragment {
     }
 
     private void getAllCategories() {
-        List<AddCategoryModel> allCategoriesList = dbHelper.getAllCategories();
+        allCategoriesList = dbHelper.getAllCategories();
         if(allCategoriesList.size()==0){
             recyclerView.setVisibility(View.GONE);
             mNoDataLl.setVisibility(View.VISIBLE);
@@ -274,9 +271,26 @@ public class AllCategoriesFrg extends BaseFragment {
         }
 
 
+        public void filter(String text) {
+            List<AddCategoryModel> filteredList = new ArrayList<>();
+            for (AddCategoryModel item : childFeedList) {
+                Log.e("Item", item.getCategoryName());
+                if (item.getCategoryName().toLowerCase().contains(text.toLowerCase())) {
+                    filteredList.add(item);
+                }
+            }
+            this.childFeedList=filteredList;
+            notifyDataSetChanged();
+        }
+
         @Override
         public int getItemCount() {
             return childFeedList.size();
+        }
+
+        public void filterList(List<AddCategoryModel> filteredList) {
+            this.childFeedList = filteredList;
+            notifyDataSetChanged();
         }
 
 
