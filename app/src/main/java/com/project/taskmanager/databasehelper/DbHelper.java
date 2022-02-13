@@ -177,4 +177,11 @@ public class DbHelper extends SQLiteOpenHelper {
         return notes;
     }
 
+    public void deleteTask(AddTaskModel note) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(AddTaskModel.TABLE_NAME, AddTaskModel.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(note.getId())});
+        db.close();
+    }
+
 }
