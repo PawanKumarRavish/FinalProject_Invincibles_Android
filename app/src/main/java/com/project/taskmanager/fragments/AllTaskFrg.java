@@ -134,7 +134,7 @@ public class AllTaskFrg extends BaseFragment {
                 } else if (mDescriptionEt.getText().toString().length() == 0) {
                     Toast.makeText(getActivity(), "Description should not be empty", Toast.LENGTH_LONG).show();
                 }else{
-                    /*dbHelper.updateTask(new AddTaskModel() ,"","","","",1);*/
+                    dbHelper.updateTask(new AddTaskModel() ,"","","","",1);
                     //editDialog.dismiss();
                     //getAllCategories();
                 }
