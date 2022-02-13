@@ -11,9 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,6 +73,7 @@ public class AllTaskFrg extends BaseFragment {
         return view;
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -109,6 +113,40 @@ public class AllTaskFrg extends BaseFragment {
                 });
             }
         }, 100);
+    }
+    private void editTask(AddTaskModel addCategoryModel) {
+
+        View view = getLayoutInflater().inflate(R.layout.edit_category_layout, null);
+
+        EditText mCategoryNameEt = (EditText) view.findViewById(R.id.mCategoryNameEt);
+        EditText mDescriptionEt = (EditText) view.findViewById(R.id.description_et);
+
+        mCategoryNameEt.setText(addCategoryModel.getCategoryName());
+        mDescriptionEt.setText(addCategoryModel.getTaskDescription());
+
+
+        Button mSaveBtn=(Button)view.findViewById(R.id.saveBtn);
+        mSaveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCategoryNameEt.getText().toString().trim().isEmpty()){
+                    Toast.makeText(getActivity(), "Category Name should not be empty", Toast.LENGTH_LONG).show();
+                } else if (mDescriptionEt.getText().toString().length() == 0) {
+                    Toast.makeText(getActivity(), "Description should not be empty", Toast.LENGTH_LONG).show();
+                }else{
+                    /*dbHelper.updateTask(new AddTaskModel() ,"","","","",1);*/
+                    //editDialog.dismiss();
+                    //getAllCategories();
+                }
+            }
+        });
+
+
+        //editDialog = new BottomSheetDialog(getActivity());
+        //editDialog.setContentView(view);
+        //editDialog.show();
+
+
     }
     private void getAllTasks() {
         allTasks = dbHelper.getAllTasks();
@@ -188,7 +226,7 @@ public class AllTaskFrg extends BaseFragment {
             holder.mEditTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   // editCategory(ledger);
+                   editTask(ledger);
                 }
             });
 
