@@ -78,21 +78,7 @@ public class AllTaskFrg extends BaseFragment {
         mMaterialColors = getActivity().getResources().getIntArray(R.array.colors);
         mSearchEt.setText("");
 
-        allTasks = dbHelper.getAllTasks();
-        if (allTasks.size() > 0) {
-            mRecyclerView.setVisibility(View.VISIBLE);
-            mNoDataLl.setVisibility(View.GONE);
-            tasksAdapter=new TasksAdapter(getActivity(),allTasks);
-            mRecyclerView.setHasFixedSize(true);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            mRecyclerView.setAdapter(tasksAdapter);
-            tasksAdapter.notifyDataSetChanged();
-
-        } else {
-            mRecyclerView.setVisibility(View.GONE);
-            mNoDataLl.setVisibility(View.VISIBLE);
-
-        }
+        getAllTasks();
 
 
         final Handler handler = new Handler();
@@ -123,6 +109,23 @@ public class AllTaskFrg extends BaseFragment {
                 });
             }
         }, 100);
+    }
+    private void getAllTasks() {
+        allTasks = dbHelper.getAllTasks();
+        if (allTasks.size() > 0) {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mNoDataLl.setVisibility(View.GONE);
+            tasksAdapter=new TasksAdapter(getActivity(),allTasks);
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mRecyclerView.setAdapter(tasksAdapter);
+            tasksAdapter.notifyDataSetChanged();
+
+        } else {
+            mRecyclerView.setVisibility(View.GONE);
+            mNoDataLl.setVisibility(View.VISIBLE);
+
+        }
     }
 
     @Override
@@ -174,20 +177,20 @@ public class AllTaskFrg extends BaseFragment {
             holder.mIcon.setShapeColor(mMaterialColors[RANDOM.nextInt(mMaterialColors.length)]);
 
 
-            /*holder.mDeleteTv.setOnClickListener(new View.OnClickListener() {
+            holder.mDeleteTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dbHelper.deleteCategory(ledger);
-                    getAllCategories();
+                    dbHelper.deleteTask(ledger);
+                    getAllTasks();
                 }
             });
 
             holder.mEditTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    editCategory(ledger);
+                   // editCategory(ledger);
                 }
-            });*/
+            });
 
 
         }
