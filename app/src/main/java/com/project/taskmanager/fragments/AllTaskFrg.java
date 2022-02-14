@@ -2,6 +2,7 @@ package com.project.taskmanager.fragments;
 
 import static com.project.taskmanager.interfaces.HomeInteractiveListener.LEDGER_TAB;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,9 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,13 +27,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.ivbaranov.mli.MaterialLetterIcon;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.project.taskmanager.R;
+import com.project.taskmanager.Utils;
 import com.project.taskmanager.databasehelper.DbHelper;
 import com.project.taskmanager.models.AddCategoryModel;
 import com.project.taskmanager.models.AddTaskModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -57,6 +63,15 @@ public class AllTaskFrg extends BaseFragment {
     private int[] mMaterialColors;
 
     TasksAdapter tasksAdapter;
+    BottomSheetDialog editDialog;
+    private int mYear, mMonth, mDay;
+    private Calendar selectedCal;
+
+    List<AddCategoryModel> allCategories;
+    BottomSheetDialog dialog1;
+    CategoriesAdapter categoriesAdapter;
+    TextView mcategoryTv;
+    int selectedCategoryId=0;
 
     private static AllTaskFrg mInstance;
     public static AllTaskFrg getInstance() {
@@ -83,6 +98,9 @@ public class AllTaskFrg extends BaseFragment {
         mSearchEt.setText("");
 
         getAllTasks();
+
+        allCategories = dbHelper.getAllCategories();
+        setCategoriesAdapter(allCategories);
 
 
         final Handler handler = new Handler();
@@ -114,37 +132,131 @@ public class AllTaskFrg extends BaseFragment {
             }
         }, 100);
     }
+
+
+    private void setCategoriesAdapter(List<AddCategoryModel> allCategories) {
+
+        View view = getLayoutInflater().inflate(R.layout.dialog_catgories, null);
+
+        RecyclerView recyclerVieww = (RecyclerView) view.findViewById(R.id.mRecyclerView);
+        recyclerVieww.setHasFixedSize(true);
+        recyclerVieww.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        TextView mNoDataFound = (TextView) view.findViewById(R.id.noDataFound_tvv);
+
+        if (allCategories.size() == 0) {
+            mNoDataFound.setVisibility(View.VISIBLE);
+            recyclerVieww.setVisibility(View.GONE);
+        } else {
+            mNoDataFound.setVisibility(View.GONE);
+            recyclerVieww.setVisibility(View.VISIBLE);
+            categoriesAdapter = new CategoriesAdapter(getActivity(), allCategories);
+            recyclerVieww.setAdapter(categoriesAdapter);
+        }
+
+        dialog1 = new BottomSheetDialog(getActivity());
+        dialog1.setContentView(view);
+
+
+    }
+
     private void editTask(AddTaskModel addCategoryModel) {
 
-        View view = getLayoutInflater().inflate(R.layout.edit_category_layout, null);
+        View view = getLayoutInflater().inflate(R.layout.edit_task_layout, null);
 
-        EditText mCategoryNameEt = (EditText) view.findViewById(R.id.mCategoryNameEt);
+        EditText mTaskNameEt = (EditText) view.findViewById(R.id.mTaskNameTv);
         EditText mDescriptionEt = (EditText) view.findViewById(R.id.description_et);
+        TextView mDateTv = (TextView) view.findViewById(R.id.date_tv);
+         mcategoryTv = (TextView) view.findViewById(R.id.mCategoryTv);
+        RelativeLayout mCategoryRl = (RelativeLayout) view.findViewById(R.id.mCategoryLayout);
+        RelativeLayout mDateLayout = (RelativeLayout) view.findViewById(R.id.dateLayout);
 
-        mCategoryNameEt.setText(addCategoryModel.getCategoryName());
+        mCategoryRl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog1.show();
+            }
+        });
+
+        mDateLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.hideKeyboard(getActivity());
+                // Get Current Date
+                final Calendar c = Calendar.getInstance();
+                mYear = c.get(Calendar.YEAR);
+                mMonth = c.get(Calendar.MONTH);
+                mDay = c.get(Calendar.DAY_OF_MONTH);
+
+                final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    String fmonth, fDate;
+                    int month;
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                        try {
+                            if (monthOfYear < 10 && dayOfMonth < 10) {
+
+                                fmonth = "0" + monthOfYear;
+                                month = Integer.parseInt(fmonth) + 1;
+                                fDate = "0" + dayOfMonth;
+                                String paddedMonth = String.format("%02d", month);
+                                mDateTv.setText(fDate + "-" + paddedMonth + "-" + year);
+
+                            } else {
+
+                                fmonth = "0" + monthOfYear;
+                                month = Integer.parseInt(fmonth) + 1;
+                                String paddedMonth = String.format("%02d", month);
+                                mDateTv.setText(dayOfMonth + "-" + paddedMonth + "-" + year);
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                        // mDateTv.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                        selectedCal = Calendar.getInstance();
+                        selectedCal.set(Calendar.YEAR, year);
+                        selectedCal.set(Calendar.MONTH, monthOfYear);
+                        selectedCal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    }
+                }, mYear, mMonth, mDay);
+                datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis());
+                datePickerDialog.show();
+            }
+        });
+
+        mTaskNameEt.setText(addCategoryModel.getTaskName());
         mDescriptionEt.setText(addCategoryModel.getTaskDescription());
+        mDateTv.setText(addCategoryModel.getTaskDueDate());
+        mcategoryTv.setText(addCategoryModel.getCategoryName());
+        selectedCategoryId=addCategoryModel.getCategoryId();
 
 
         Button mSaveBtn=(Button)view.findViewById(R.id.saveBtn);
         mSaveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mCategoryNameEt.getText().toString().trim().isEmpty()){
-                    Toast.makeText(getActivity(), "Category Name should not be empty", Toast.LENGTH_LONG).show();
+                if(mTaskNameEt.getText().toString().trim().isEmpty()){
+                    Toast.makeText(getActivity(), "Task Name should not be empty", Toast.LENGTH_LONG).show();
                 } else if (mDescriptionEt.getText().toString().length() == 0) {
                     Toast.makeText(getActivity(), "Description should not be empty", Toast.LENGTH_LONG).show();
                 }else{
-                    dbHelper.updateTask(new AddTaskModel() ,"","","","",1);
-                    //editDialog.dismiss();
-                    //getAllCategories();
+                    dbHelper.updateTask(addCategoryModel ,mTaskNameEt.getText().toString().trim(),mDescriptionEt.getText().toString().trim(),
+                            mDateTv.getText().toString(),mcategoryTv.getText().toString(),selectedCategoryId);
+                    editDialog.dismiss();
+                    getAllTasks();
                 }
             }
         });
 
 
-        //editDialog = new BottomSheetDialog(getActivity());
-        //editDialog.setContentView(view);
-        //editDialog.show();
+        editDialog = new BottomSheetDialog(getActivity());
+        editDialog.setContentView(view);
+        editDialog.show();
 
 
     }
@@ -278,6 +390,61 @@ public class AllTaskFrg extends BaseFragment {
                 mIcon = (MaterialLetterIcon) itemView.findViewById(R.id.imageIcon);
                 mFrontLayout = (FrameLayout) itemView.findViewById(R.id.frontLayout);
 
+
+            }
+        }
+    }
+
+
+    //---------------------------lEDGER lIST Adapter------------------------------------//
+    public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.MyViewHolder> {
+
+        Context context;
+        List<AddCategoryModel> childFeedList;
+
+
+        public CategoriesAdapter(Context context, List<AddCategoryModel> childFeedList) {
+            this.context = context;
+            this.childFeedList = childFeedList;
+        }
+
+        @Override
+        public CategoriesAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_categories_design, parent, false);
+            return new CategoriesAdapter.MyViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(CategoriesAdapter.MyViewHolder holder, final int position) {
+            AddCategoryModel ledger = childFeedList.get(position);
+            holder.mCategoryNameTv.setText(ledger.getCategoryName());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mcategoryTv.setText(ledger.getCategoryName());
+                    selectedCategoryId=ledger.getId();
+                    dialog1.dismiss();
+                }
+            });
+
+
+        }
+
+
+        @Override
+        public int getItemCount() {
+            return childFeedList.size();
+        }
+
+
+
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            TextView mCategoryNameTv;
+            public MyViewHolder(View itemView) {
+                super(itemView);
+
+                mCategoryNameTv = (TextView) itemView.findViewById(R.id.mCategoryNameTv);
 
             }
         }
