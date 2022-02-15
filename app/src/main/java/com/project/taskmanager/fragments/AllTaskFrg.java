@@ -354,7 +354,7 @@ public class AllTaskFrg extends BaseFragment {
 
                 }
             });
-            /*holder.mShowSubTaskTv.setOnClickListener(new View.OnClickListener() {
+            holder.mShowSubTaskTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Bundle bundle=new Bundle();
@@ -365,7 +365,7 @@ public class AllTaskFrg extends BaseFragment {
 
 
                 }
-            });*/
+            });
 
             holder.mCompleteTaskTv.setOnClickListener(new View.OnClickListener() {
                 @Override
