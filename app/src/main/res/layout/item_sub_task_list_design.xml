@@ -94,39 +94,6 @@
                             android:text="---"
                             android:textSize="14sp" />
 
-                        <LinearLayout
-                            android:weightSum="2"
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/mAddSubTaskTv"
-                                android:padding="7dp"
-                                android:textStyle="bold"
-                                android:layout_weight="1"
-                                android:textColor="@color/colorPrimaryDark"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
-                                android:text="Add Sub Task"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:id="@+id/mShowSubTaskTv"
-                                android:padding="7dp"
-                                android:textStyle="bold"
-                                android:layout_weight="1"
-                                android:textColor="@color/colorPrimaryDark"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
-                                android:text="Show All Sub Tasks"
-                                android:textSize="14sp" />
-
-
-
-                        </LinearLayout>
 
                         <LinearLayout
                             android:gravity="center"

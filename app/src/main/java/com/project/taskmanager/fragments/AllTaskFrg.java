@@ -32,6 +32,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.project.taskmanager.R;
 import com.project.taskmanager.Utils;
 import com.project.taskmanager.databasehelper.DbHelper;
+import com.project.taskmanager.interfaces.Tags;
 import com.project.taskmanager.models.AddCategoryModel;
 import com.project.taskmanager.models.AddTaskModel;
 
@@ -342,6 +343,37 @@ public class AllTaskFrg extends BaseFragment {
                 }
             });
 
+            holder.mAddSubTaskTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle=new Bundle();
+                    bundle.putInt(Tags.TASK_ID,ledger.getId());
+                    AddSubTaskFrg addSubTaskFrg =new AddSubTaskFrg();
+                    addSubTaskFrg.setArguments(bundle);
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, addSubTaskFrg).addToBackStack(null).commit();
+
+                }
+            });
+            /*holder.mShowSubTaskTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle=new Bundle();
+                    bundle.putInt(Tags.TASK_ID,ledger.getId());
+                    AllSubtasksFrg allSubtasksFrg =new AllSubtasksFrg();
+                    allSubtasksFrg.setArguments(bundle);
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, allSubtasksFrg).addToBackStack(null).commit();
+
+
+                }
+            });*/
+
+            holder.mCompleteTaskTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
 
         }
 
@@ -373,7 +405,7 @@ public class AllTaskFrg extends BaseFragment {
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
 
-            TextView mAccountNameTv,mDescTv;
+            TextView mAccountNameTv,mDescTv,mShowSubTaskTv,mAddSubTaskTv,mCompleteTaskTv;
             TextView mDeleteTv;
             TextView mEditTv;
             MaterialLetterIcon mIcon;
@@ -386,6 +418,9 @@ public class AllTaskFrg extends BaseFragment {
                 mAccountNameTv = (TextView) itemView.findViewById(R.id.accountName_tv);
                 mDescTv = (TextView) itemView.findViewById(R.id.mDescTv);
                 mDeleteTv = (TextView) itemView.findViewById(R.id.delete_tv);
+                mAddSubTaskTv =  itemView.findViewById(R.id.mAddSubTaskTv);
+                mCompleteTaskTv =  itemView.findViewById(R.id.mCompleteTask);
+                mShowSubTaskTv =  itemView.findViewById(R.id.mShowSubTaskTv);
                 mEditTv = (TextView) itemView.findViewById(R.id.edit_tv);
                 mIcon = (MaterialLetterIcon) itemView.findViewById(R.id.imageIcon);
                 mFrontLayout = (FrameLayout) itemView.findViewById(R.id.frontLayout);

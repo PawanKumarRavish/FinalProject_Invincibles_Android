@@ -12,7 +12,9 @@
         <entry key="app/src/main/res/layout/activity_record_audio.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/add_expense_layout.xml" value="0.165" />
         <entry key="app/src/main/res/layout/add_income_layout.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/add_sub_task_layout.xml" value="0.125" />
         <entry key="app/src/main/res/layout/add_task_layout.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/all_sub_tasks_layout.xml" value="0.18020833333333333" />
         <entry key="app/src/main/res/layout/all_tasks_layout.xml" value="0.165" />
         <entry key="app/src/main/res/layout/demo2_layout.xml" value="0.18020833333333333" />
         <entry key="app/src/main/res/layout/edit_category_layout.xml" value="0.25" />
@@ -20,6 +22,7 @@
         <entry key="app/src/main/res/layout/edit_task_layout.xml" value="0.25" />
         <entry key="app/src/main/res/layout/home_fragment_layout.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_categories_design.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/item_sub_task_list_design.xml" value="0.18020833333333333" />
         <entry key="app/src/main/res/layout/item_task_list_design.xml" value="0.25" />
         <entry key="app/src/main/res/layout/ledger_layout.xml" value="0.165" />
         <entry key="app/src/main/res/layout/ledger_list_design.xml" value="0.165" />

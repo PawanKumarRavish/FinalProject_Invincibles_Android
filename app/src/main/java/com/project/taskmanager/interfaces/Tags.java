@@ -19,6 +19,7 @@ public interface Tags {
     int EXPENSE = 2;
     String CASH = "Cash";
     String BANK = "Bank";
+    String TASK_ID = "taskId";
 
 }
 
