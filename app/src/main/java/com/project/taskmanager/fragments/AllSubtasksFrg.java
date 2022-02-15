@@ -70,12 +70,12 @@ public class AllSubtasksFrg extends BaseFragment {
 
         }
 
-        getAllSubtasks();
+        //getAllSubtasks();
 
 
     }
 
-    private void getAllSubtasks() {
+    /*private void getAllSubtasks() {
         List<AddSubTaskModel> subTasksOfTasks = dbHelper.getSubTasksOfTasks(taskId);
         Log.e("subTaskList", subTasksOfTasks.size() + "");
         if (subTasksOfTasks.size() == 0) {
@@ -92,7 +92,7 @@ public class AllSubtasksFrg extends BaseFragment {
         }
 
 
-    }
+    }*/
 
 
 
