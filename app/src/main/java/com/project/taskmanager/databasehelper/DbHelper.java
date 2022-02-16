@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.project.taskmanager.models.AddCategoryModel;
 import com.project.taskmanager.models.AddSubTaskModel;
 import com.project.taskmanager.models.AddTaskModel;
+import com.project.taskmanager.models.ImageModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(AddCategoryModel.CREATE_TABLE);
         db.execSQL(AddTaskModel.CREATE_TABLE);
         db.execSQL(AddSubTaskModel.CREATE_TABLE);
+        db.execSQL(ImageModel.CREATE_TABLE);
 
     }
 
@@ -49,6 +51,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + AddCategoryModel.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + AddTaskModel.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + AddSubTaskModel.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + ImageModel.TABLE_NAME);
 
         // Create tables again
         onCreate(db);
@@ -77,6 +80,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return id;
     }
 
+    @SuppressLint("Range")
     public List<AddCategoryModel> getAllCategories() {
         List<AddCategoryModel> notes = new ArrayList<>();
 
@@ -125,7 +129,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public long insertTask(String name,String des,String dueDate,String categoryName,int categoryId,String isTaskCompleted,byte[] image) {
+    public long insertTask(String name,String des,String dueDate,String categoryName,int categoryId,String isTaskCompleted) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -138,7 +142,6 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(AddTaskModel.COLUMN_CATEGORY_NAME, categoryName);
         values.put(AddTaskModel.COLUMN_CATEGORY_ID, categoryId);
         values.put(AddTaskModel.COLUMN_IS_TASK_COMPLETED, isTaskCompleted);
-        values.put(AddTaskModel.COLUMN_IMAGE, image);
 
         // insert row
         long id = db.insert(AddTaskModel.TABLE_NAME, null, values);
@@ -294,6 +297,61 @@ public class DbHelper extends SQLiteOpenHelper {
         // updating row
         return db.update(AddSubTaskModel.TABLE_NAME, values, AddTaskModel.COLUMN_ID + " = ?",
                 new String[]{String.valueOf(note.getId())});
+    }
+
+
+
+
+    @SuppressLint("Range")
+    public List<ImageModel> getImagesByTask(int taskid) {
+        List<ImageModel> notes = new ArrayList<>();
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + ImageModel.TABLE_NAME + " WHERE " + ImageModel.COLUMN_TASK_ID + "='" + taskid + "'"+ " ORDER BY " +
+                ImageModel.COLUMN_TIMESTAMP + " DESC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                ImageModel note = new ImageModel();
+                note.setId(cursor.getInt(cursor.getColumnIndex(ImageModel.COLUMN_ID)));
+                note.setTaskId(cursor.getInt(cursor.getColumnIndex(ImageModel.COLUMN_TASK_ID)));
+                note.setImage(cursor.getBlob(cursor.getColumnIndex(ImageModel.COLUMN_IMAGE_NAME)));
+                note.setTimestamp(cursor.getString(cursor.getColumnIndex(ImageModel.COLUMN_TIMESTAMP)));
+
+                notes.add(note);
+            } while (cursor.moveToNext());
+        }
+
+        // close db connection
+        db.close();
+
+        // return notes list
+        return notes;
+    }
+
+
+
+    public long insertImageByTaskId(byte[] image,int taskId) {
+        // get writable database as we want to write data
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        // `id` and `timestamp` will be inserted automatically.
+        // no need to add them
+        values.put(ImageModel.COLUMN_IMAGE_NAME, image);
+        values.put(ImageModel.COLUMN_TASK_ID, taskId);
+        // insert row
+        long id = db.insert(ImageModel.TABLE_NAME, null, values);
+
+        // close db connection
+        db.close();
+
+        // return newly inserted row id
+        return id;
     }
 
 }

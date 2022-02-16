@@ -3,6 +3,7 @@ package com.project.taskmanager.fragments;
 import static com.project.taskmanager.interfaces.HomeInteractiveListener.LEDGER_TAB;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -40,6 +42,7 @@ import com.project.taskmanager.interfaces.Tags;
 import com.project.taskmanager.models.AddCategoryModel;
 import com.project.taskmanager.models.AddSubTaskModel;
 import com.project.taskmanager.models.AddTaskModel;
+import com.project.taskmanager.models.ImageModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -79,6 +82,8 @@ public class AllTaskFrg extends BaseFragment {
     TextView mcategoryTv;
     int selectedCategoryId=0;
 
+    ImagesAdapter imagesAdapter;
+
     private static AllTaskFrg mInstance;
     public static AllTaskFrg getInstance() {
         mInstance = null;
@@ -104,6 +109,7 @@ public class AllTaskFrg extends BaseFragment {
         mSearchEt.setText("");
 
         getAllTasks();
+
 
         allCategories = dbHelper.getAllCategories();
         setCategoriesAdapter(allCategories);
@@ -325,6 +331,23 @@ public class AllTaskFrg extends BaseFragment {
             holder.mAccountNameTv.setText(ledger.getTaskName());
             holder.mDescTv.setText(ledger.getTaskDescription());
 
+            holder.mShowImages.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    List<ImageModel> imagesByTask = dbHelper.getImagesByTask(ledger.getId());
+                    Log.e("liST",imagesByTask.size()+"");
+                    if(imagesByTask.size()==0){
+                        Toast.makeText(getActivity(), "No Images found", Toast.LENGTH_SHORT).show();
+                    }else{
+                        setImagesAdapter(imagesByTask);
+                    }
+
+                }
+            });
+
+
+
+
             if(ledger.getIsTaskCompleted().equalsIgnoreCase("false")){
                 holder.mCompleteTaskTv.setText("Mark As Completed");
                 holder.mCompleteTaskTv.setTextColor(Color.parseColor("#DB4437"));
@@ -341,9 +364,7 @@ public class AllTaskFrg extends BaseFragment {
             holder.mIcon.setLetterSize(16);
             holder.mIcon.setShapeColor(mMaterialColors[RANDOM.nextInt(mMaterialColors.length)]);
 
-            byte[] image = ledger.getImage();
-            Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
-            holder.mImage.setImageBitmap(bitmap);
+
 
 
             holder.mDeleteTv.setOnClickListener(new View.OnClickListener() {
@@ -448,10 +469,9 @@ public class AllTaskFrg extends BaseFragment {
 
             TextView mAccountNameTv,mDescTv,mShowSubTaskTv,mAddSubTaskTv,mCompleteTaskTv;
             TextView mDeleteTv;
-            TextView mEditTv;
+            TextView mEditTv,mShowImages;
             MaterialLetterIcon mIcon;
             View mFrontLayout;
-            ImageView mImage;
 
 
             public MyViewHolder(View itemView) {
@@ -463,14 +483,43 @@ public class AllTaskFrg extends BaseFragment {
                 mAddSubTaskTv =  itemView.findViewById(R.id.mAddSubTaskTv);
                 mCompleteTaskTv =  itemView.findViewById(R.id.mCompleteTask);
                 mShowSubTaskTv =  itemView.findViewById(R.id.mShowSubTaskTv);
+                mShowImages =  itemView.findViewById(R.id.mShowImages);
                 mEditTv = (TextView) itemView.findViewById(R.id.edit_tv);
-                mImage =  itemView.findViewById(R.id.mImage);
                 mIcon = (MaterialLetterIcon) itemView.findViewById(R.id.imageIcon);
                 mFrontLayout = (FrameLayout) itemView.findViewById(R.id.frontLayout);
 
 
             }
         }
+    }
+
+    private void setImagesAdapter(List<ImageModel> imagesByTask) {
+        showDialog(getActivity(),imagesByTask);
+
+
+    }
+
+
+    public  void showDialog(Context context, List<ImageModel> list) {
+        Dialog alertDialog;
+        alertDialog = new Dialog(context);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        View view = inflater.inflate(R.layout.dialog_layout, null);
+
+        RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.mRecyclerView);
+        imagesAdapter=new ImagesAdapter(getActivity(),list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
+        mRecyclerView.setAdapter(imagesAdapter);
+        imagesAdapter.notifyDataSetChanged();
+
+
+        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //this line MUST BE BEFORE setContentView
+        alertDialog.setCanceledOnTouchOutside(true);
+        alertDialog.setCancelable(true);
+        alertDialog.setContentView(view);
+        alertDialog.show();
+        Window window = alertDialog.getWindow();
+        window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
 
@@ -523,6 +572,58 @@ public class AllTaskFrg extends BaseFragment {
                 super(itemView);
 
                 mCategoryNameTv = (TextView) itemView.findViewById(R.id.mCategoryNameTv);
+
+            }
+        }
+    }
+
+
+
+
+    //---------------------------lEDGER lIST Adapter------------------------------------//
+    public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.MyViewHolder> {
+
+        Context context;
+        List<ImageModel> childFeedList;
+
+
+        public ImagesAdapter(Context context, List<ImageModel> childFeedList) {
+            this.context = context;
+            this.childFeedList = childFeedList;
+        }
+
+        @Override
+        public ImagesAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_images_design, parent, false);
+            return new ImagesAdapter.MyViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ImagesAdapter.MyViewHolder holder, final int position) {
+            ImageModel ledger = childFeedList.get(position);
+             byte[] image = ledger.getImage();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
+            holder.mImage.setImageBitmap(bitmap);
+
+
+
+        }
+
+
+        @Override
+        public int getItemCount() {
+            return childFeedList.size();
+        }
+
+
+
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+            ImageView mImage;
+            public MyViewHolder(View itemView) {
+                super(itemView);
+
+                mImage = itemView.findViewById(R.id.mImage);
 
             }
         }

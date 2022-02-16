@@ -1,5 +1,11 @@
 package com.project.taskmanager.activities;
 
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 
@@ -11,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -50,6 +57,8 @@ public class HomeActivity extends WalletActivity implements View.OnClickListener
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 
+
+
         mBottomNavView.getMenu().clear(); //clear old inflated items.
         mBottomNavView.inflateMenu(R.menu.bottom_nav);
 
@@ -60,6 +69,8 @@ public class HomeActivity extends WalletActivity implements View.OnClickListener
         mToolBarlogo = findViewById(R.id.mToolBarlogo);
         mCalenderSpinner = findViewById(R.id.calenderSpinner);
         mBackArrow.setOnClickListener(this);
+
+
 
 
         mBottomNavView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -138,6 +149,17 @@ public class HomeActivity extends WalletActivity implements View.OnClickListener
     @Override
     public TextView getToolBarText() {
         return mToolbarTitle;
+    }
+
+    public boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(HomeActivity.this, WRITE_EXTERNAL_STORAGE);
+        int result1 = ContextCompat.checkSelfPermission(HomeActivity.this, RECORD_AUDIO);
+        int result3 = ContextCompat.checkSelfPermission(HomeActivity.this, READ_EXTERNAL_STORAGE);
+        int result4 = ContextCompat.checkSelfPermission(HomeActivity.this, CAMERA);
+        return result == PackageManager.PERMISSION_GRANTED &&
+                result1 == PackageManager.PERMISSION_GRANTED &&
+                result3 == PackageManager.PERMISSION_GRANTED &&
+                result4 == PackageManager.PERMISSION_GRANTED;
     }
 
 

@@ -138,6 +138,7 @@ public class AddTaskFrg extends BaseFragment {
     List<byte[]> multiImageArray  = new ArrayList<byte[]>();
     byte[] imageArray = null;
     ImageAdapter adapter = new ImageAdapter();
+    int selectType=-1;
 
 
     @Nullable
@@ -236,15 +237,30 @@ public class AddTaskFrg extends BaseFragment {
                         || mCategoryTv.getText().toString().trim().isEmpty()) {
                     Toast.makeText(getActivity(), "Please add all the fields", Toast.LENGTH_SHORT).show();
                 } else {
-                    long primaryKey = dbHelper.insertTask(mTaskNameTv.getText().toString().trim(), mDescriptionEt.getText().toString().trim(),
-                            mDueDateTv.getText().toString().trim(), mCategoryTv.getText().toString(), selectedCategoryId, "false",imageArray);
+                    long primaryKey=dbHelper.insertTask(mTaskNameTv.getText().toString().trim(), mDescriptionEt.getText().toString().trim(),
+                            mDueDateTv.getText().toString().trim(), mCategoryTv.getText().toString(), selectedCategoryId, "false");
                     Log.e("Key", primaryKey + "");
                     if (primaryKey == -1) {
                         Toast.makeText(getActivity(), "Data is not inserted in database", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getActivity(), "Data Successfully inserted", Toast.LENGTH_SHORT).show();
-                        HomeFragment homeFragment = new HomeFragment();
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, homeFragment).commit();
+                        if(selectType==1){
+                            long l = dbHelper.insertImageByTaskId(imageArray, (int) primaryKey);
+                            Log.e("Inserted",l+"");
+                            Toast.makeText(getActivity(), "Data Successfully inserted", Toast.LENGTH_SHORT).show();
+                            HomeFragment homeFragment = new HomeFragment();
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, homeFragment).commit();
+
+                        }else{
+                            for(int i =0;i<multiImageArray.size();i++){
+                                long l = dbHelper.insertImageByTaskId(multiImageArray.get(i), (int) primaryKey);
+                            }
+                            Toast.makeText(getActivity(), "Data Successfully inserted", Toast.LENGTH_SHORT).show();
+                            HomeFragment homeFragment = new HomeFragment();
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, homeFragment).commit();
+
+
+                        }
+
                     }
                 }
 
@@ -316,14 +332,14 @@ public class AddTaskFrg extends BaseFragment {
                         }
                     }
                 });
-                /*builder.setNegativeButton("Gallery", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Gallery", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
                         gallery.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                         startActivityForResult(gallery, PICK_IMAGE);
                     }
-                });*/
+                });
 
                 AlertDialog ad = builder.create();
                 ad.show();
@@ -445,13 +461,13 @@ public class AddTaskFrg extends BaseFragment {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             imageSelected.setImageBitmap(imageBitmap);
-            //selectType = 1;
+            selectType = 1;
             imageArray = DataConvertor.convertImageToByteArray(imageBitmap);
             imageSelected.setVisibility(View.VISIBLE);
             //binding.rvList.setVisibility(View.GONE);
         }
         if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
-            //selectType = 3;
+            selectType = 2;
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
             if(data.getData()!=null){
 
