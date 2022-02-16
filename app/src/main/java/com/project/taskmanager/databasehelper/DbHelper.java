@@ -1,5 +1,6 @@
 package com.project.taskmanager.databasehelper;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -124,7 +125,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public long insertTask(String name,String des,String dueDate,String categoryName,int categoryId,String isTaskCompleted) {
+    public long insertTask(String name,String des,String dueDate,String categoryName,int categoryId,String isTaskCompleted,byte[] image) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -137,6 +138,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(AddTaskModel.COLUMN_CATEGORY_NAME, categoryName);
         values.put(AddTaskModel.COLUMN_CATEGORY_ID, categoryId);
         values.put(AddTaskModel.COLUMN_IS_TASK_COMPLETED, isTaskCompleted);
+        values.put(AddTaskModel.COLUMN_IMAGE, image);
 
         // insert row
         long id = db.insert(AddTaskModel.TABLE_NAME, null, values);
@@ -148,6 +150,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return id;
     }
 
+    @SuppressLint("Range")
     public List<AddTaskModel> getAllTasks() {
         List<AddTaskModel> notes = new ArrayList<>();
 
@@ -170,6 +173,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 note.setCategoryId(cursor.getInt(cursor.getColumnIndex(AddTaskModel.COLUMN_CATEGORY_ID)));
                 note.setIsTaskCompleted(cursor.getString(cursor.getColumnIndex(AddTaskModel.COLUMN_IS_TASK_COMPLETED)));
                 note.setTimestamp(cursor.getString(cursor.getColumnIndex(AddTaskModel.COLUMN_TIMESTAMP)));
+                note.setImage(cursor.getBlob(cursor.getColumnIndex(AddTaskModel.COLUMN_IMAGE)));
 
                 notes.add(note);
             } while (cursor.moveToNext());
@@ -238,6 +242,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
+    @SuppressLint("Range")
     public List<AddSubTaskModel> getSubTasksOfTasks(int taskid) {
         List<AddSubTaskModel> notes = new ArrayList<>();
 

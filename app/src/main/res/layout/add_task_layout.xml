@@ -161,6 +161,73 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:visibility="gone"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:textAllCaps="false"
+                    android:text="Start Rec"
+                    android:id="@+id/mStartRec"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                </Button>
+
+                <Button
+                    android:enabled="false"
+                    android:textAllCaps="false"
+                    android:text="Stop Rec"
+                    android:layout_marginLeft="30dp"
+                    android:id="@+id/mStopRec"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                </Button>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:textAllCaps="false"
+                    android:text="Add Images"
+                    android:id="@+id/mAddImagesBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                </Button>
+
+                <ImageView
+                    android:id="@+id/imageSelected"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:elevation="3dp"
+                    android:src="@drawable/no_image" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:visibility="gone"
+                    android:id="@+id/rvList"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_margin="10dp"
+                    android:elevation="3dp"/>
+
+
+            </LinearLayout>
+
 
 
 

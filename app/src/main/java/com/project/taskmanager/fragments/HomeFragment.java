@@ -119,7 +119,7 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 AddTaskFrg homeFragment=new AddTaskFrg();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, homeFragment).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, homeFragment).addToBackStack(null).commit();
             }
         });
 

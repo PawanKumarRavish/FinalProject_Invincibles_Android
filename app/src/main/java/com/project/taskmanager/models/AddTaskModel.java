@@ -11,6 +11,7 @@ public class AddTaskModel implements Parcelable {
     private String  categoryName;
     private int  categoryId;
     private String  isTaskCompleted;
+    private byte[] image;
     private String timestamp;
 
     public static final String TABLE_NAME = "table_task";
@@ -21,6 +22,7 @@ public class AddTaskModel implements Parcelable {
     public static final String COLUMN_CATEGORY_NAME = "category_name";
     public static final String COLUMN_CATEGORY_ID = "category_id";
     public static final String COLUMN_IS_TASK_COMPLETED = "task_completed";
+    public static final String COLUMN_IMAGE = "image";
     public static final String COLUMN_TIMESTAMP = "timestamp";
 
     // Create table SQL query
@@ -33,11 +35,12 @@ public class AddTaskModel implements Parcelable {
                     + COLUMN_CATEGORY_NAME + " TEXT,"
                     + COLUMN_CATEGORY_ID + " INTEGER,"
                     + COLUMN_IS_TASK_COMPLETED + " TEXT,"
+                    + COLUMN_IMAGE + " BLOB,"
                     + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP"
                     + ")";
 
     public AddTaskModel(int id, String taskName, String taskDescription, String taskDueDate, String categoryName,
-                        int categoryId,String isTaskCompleted,String timestamp) {
+                        int categoryId,String isTaskCompleted,byte[] image,String timestamp) {
         this.id = id;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
@@ -45,6 +48,8 @@ public class AddTaskModel implements Parcelable {
         this.categoryName = categoryName;
         this.categoryId = categoryId;
         this.isTaskCompleted = isTaskCompleted;
+        this.isTaskCompleted = isTaskCompleted;
+        this.image = image;
         this.timestamp = timestamp;
     }
 
@@ -61,24 +66,8 @@ public class AddTaskModel implements Parcelable {
         categoryName = in.readString();
         categoryId = in.readInt();
         isTaskCompleted = in.readString();
+        image = in.createByteArray();
         timestamp = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(taskName);
-        dest.writeString(taskDescription);
-        dest.writeString(taskDueDate);
-        dest.writeString(categoryName);
-        dest.writeInt(categoryId);
-        dest.writeString(isTaskCompleted);
-        dest.writeString(timestamp);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static final Creator<AddTaskModel> CREATOR = new Creator<AddTaskModel>() {
@@ -155,5 +144,31 @@ public class AddTaskModel implements Parcelable {
 
     public void setIsTaskCompleted(String isTaskCompleted) {
         this.isTaskCompleted = isTaskCompleted;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(taskName);
+        dest.writeString(taskDescription);
+        dest.writeString(taskDueDate);
+        dest.writeString(categoryName);
+        dest.writeInt(categoryId);
+        dest.writeString(isTaskCompleted);
+        dest.writeByteArray(image);
+        dest.writeString(timestamp);
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }

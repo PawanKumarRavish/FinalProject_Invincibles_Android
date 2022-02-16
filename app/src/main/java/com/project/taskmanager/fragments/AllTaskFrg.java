@@ -4,6 +4,8 @@ import static com.project.taskmanager.interfaces.HomeInteractiveListener.LEDGER_
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +19,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -338,6 +341,10 @@ public class AllTaskFrg extends BaseFragment {
             holder.mIcon.setLetterSize(16);
             holder.mIcon.setShapeColor(mMaterialColors[RANDOM.nextInt(mMaterialColors.length)]);
 
+            byte[] image = ledger.getImage();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
+            holder.mImage.setImageBitmap(bitmap);
+
 
             holder.mDeleteTv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -444,6 +451,7 @@ public class AllTaskFrg extends BaseFragment {
             TextView mEditTv;
             MaterialLetterIcon mIcon;
             View mFrontLayout;
+            ImageView mImage;
 
 
             public MyViewHolder(View itemView) {
@@ -456,6 +464,7 @@ public class AllTaskFrg extends BaseFragment {
                 mCompleteTaskTv =  itemView.findViewById(R.id.mCompleteTask);
                 mShowSubTaskTv =  itemView.findViewById(R.id.mShowSubTaskTv);
                 mEditTv = (TextView) itemView.findViewById(R.id.edit_tv);
+                mImage =  itemView.findViewById(R.id.mImage);
                 mIcon = (MaterialLetterIcon) itemView.findViewById(R.id.imageIcon);
                 mFrontLayout = (FrameLayout) itemView.findViewById(R.id.frontLayout);
 

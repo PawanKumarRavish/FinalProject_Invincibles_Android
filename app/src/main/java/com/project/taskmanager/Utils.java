@@ -13,6 +13,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -123,6 +124,20 @@ public class Utils {
 
         Button btn = (Button) sweetAlertDialog.findViewById(R.id.confirm_button);
         btn.setBackgroundColor(Color.parseColor("#0786e5"));
+    }
+
+    public static String  CreateRandomAudioFileName(int string) {
+        Random random = new Random();
+        String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
+        StringBuilder stringBuilder = new StringBuilder(string);
+        int i = 0;
+        while (i < string) {
+            stringBuilder.append(RandomAudioFileName.
+                    charAt(random.nextInt(RandomAudioFileName.length())));
+
+            i++;
+        }
+        return stringBuilder.toString();
     }
 
 }
