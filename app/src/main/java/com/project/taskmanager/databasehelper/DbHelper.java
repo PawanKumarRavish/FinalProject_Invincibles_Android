@@ -124,7 +124,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public long insertTask(String name,String des,String dueDate,String categoryName,int categoryId) {
+    public long insertTask(String name,String des,String dueDate,String categoryName,int categoryId,String isTaskCompleted) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -136,6 +136,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(AddTaskModel.COLUMN_TASK_DUEDATE, dueDate);
         values.put(AddTaskModel.COLUMN_CATEGORY_NAME, categoryName);
         values.put(AddTaskModel.COLUMN_CATEGORY_ID, categoryId);
+        values.put(AddTaskModel.COLUMN_IS_TASK_COMPLETED, isTaskCompleted);
 
         // insert row
         long id = db.insert(AddTaskModel.TABLE_NAME, null, values);
@@ -167,6 +168,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 note.setTaskDueDate(cursor.getString(cursor.getColumnIndex(AddTaskModel.COLUMN_TASK_DUEDATE)));
                 note.setCategoryName(cursor.getString(cursor.getColumnIndex(AddTaskModel.COLUMN_CATEGORY_NAME)));
                 note.setCategoryId(cursor.getInt(cursor.getColumnIndex(AddTaskModel.COLUMN_CATEGORY_ID)));
+                note.setIsTaskCompleted(cursor.getString(cursor.getColumnIndex(AddTaskModel.COLUMN_IS_TASK_COMPLETED)));
                 note.setTimestamp(cursor.getString(cursor.getColumnIndex(AddTaskModel.COLUMN_TIMESTAMP)));
 
                 notes.add(note);
@@ -195,6 +197,15 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(AddTaskModel.COLUMN_TASK_DUEDATE, dueDate);
         values.put(AddTaskModel.COLUMN_CATEGORY_NAME, categoryName);
         values.put(AddTaskModel.COLUMN_CATEGORY_ID, categoryId);
+        // updating row
+        return db.update(AddTaskModel.TABLE_NAME, values, AddTaskModel.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(note.getId())});
+    }
+
+    public int updateTaskCompleted(AddTaskModel note,String isCompleted) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(AddTaskModel.COLUMN_IS_TASK_COMPLETED, isCompleted);
         // updating row
         return db.update(AddTaskModel.TABLE_NAME, values, AddTaskModel.COLUMN_ID + " = ?",
                 new String[]{String.valueOf(note.getId())});
@@ -261,6 +272,13 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // return notes list
         return notes;
+    }
+
+    public void deleteSubTask(AddSubTaskModel note) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(AddSubTaskModel.TABLE_NAME, AddSubTaskModel.COLUMN_ID + " = ?",
+                new String[]{String.valueOf(note.getId())});
+        db.close();
     }
 
 

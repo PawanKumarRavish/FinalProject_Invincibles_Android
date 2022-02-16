@@ -184,7 +184,7 @@ public class AddTaskFrg extends BaseFragment {
                     Toast.makeText(getActivity(), "Please add all the fields", Toast.LENGTH_SHORT).show();
                 }else{
                     long primaryKey = dbHelper.insertTask(mTaskNameTv.getText().toString().trim(), mDescriptionEt.getText().toString().trim(),
-                            mDueDateTv.getText().toString().trim(),mCategoryTv.getText().toString(),selectedCategoryId);
+                            mDueDateTv.getText().toString().trim(),mCategoryTv.getText().toString(),selectedCategoryId,"false");
                     Log.e("Key",primaryKey+"");
                     if(primaryKey == -1) {
                         Toast.makeText(getActivity(), "Data is not inserted in database", Toast.LENGTH_SHORT).show();

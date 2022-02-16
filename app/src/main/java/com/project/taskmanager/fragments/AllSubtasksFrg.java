@@ -135,15 +135,15 @@ public class AllSubtasksFrg extends BaseFragment {
             holder.mIcon.setShapeColor(mMaterialColors[RANDOM.nextInt(mMaterialColors.length)]);
 
 
-           /* holder.mDeleteTv.setOnClickListener(new View.OnClickListener() {
+            holder.mDeleteTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dbHelper.deleteTask(ledger);
-                    getAllTasks();
+                    dbHelper.deleteSubTask(ledger);
+                    getAllSubtasks();
                 }
             });
 
-            holder.mEditTv.setOnClickListener(new View.OnClickListener() {
+            /*holder.mEditTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     editTask(ledger);

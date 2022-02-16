@@ -10,6 +10,7 @@ public class AddTaskModel implements Parcelable {
     private String  taskDueDate;
     private String  categoryName;
     private int  categoryId;
+    private String  isTaskCompleted;
     private String timestamp;
 
     public static final String TABLE_NAME = "table_task";
@@ -19,6 +20,7 @@ public class AddTaskModel implements Parcelable {
     public static final String COLUMN_TASK_DUEDATE = "task_duedate";
     public static final String COLUMN_CATEGORY_NAME = "category_name";
     public static final String COLUMN_CATEGORY_ID = "category_id";
+    public static final String COLUMN_IS_TASK_COMPLETED = "task_completed";
     public static final String COLUMN_TIMESTAMP = "timestamp";
 
     // Create table SQL query
@@ -30,16 +32,19 @@ public class AddTaskModel implements Parcelable {
                     + COLUMN_TASK_DESCRIPTION + " TEXT,"
                     + COLUMN_CATEGORY_NAME + " TEXT,"
                     + COLUMN_CATEGORY_ID + " INTEGER,"
+                    + COLUMN_IS_TASK_COMPLETED + " TEXT,"
                     + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP"
                     + ")";
 
-    public AddTaskModel(int id, String taskName, String taskDescription, String taskDueDate, String categoryName,int categoryId,String timestamp) {
+    public AddTaskModel(int id, String taskName, String taskDescription, String taskDueDate, String categoryName,
+                        int categoryId,String isTaskCompleted,String timestamp) {
         this.id = id;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskDueDate = taskDueDate;
         this.categoryName = categoryName;
         this.categoryId = categoryId;
+        this.isTaskCompleted = isTaskCompleted;
         this.timestamp = timestamp;
     }
 
@@ -55,6 +60,7 @@ public class AddTaskModel implements Parcelable {
         taskDueDate = in.readString();
         categoryName = in.readString();
         categoryId = in.readInt();
+        isTaskCompleted = in.readString();
         timestamp = in.readString();
     }
 
@@ -66,6 +72,7 @@ public class AddTaskModel implements Parcelable {
         dest.writeString(taskDueDate);
         dest.writeString(categoryName);
         dest.writeInt(categoryId);
+        dest.writeString(isTaskCompleted);
         dest.writeString(timestamp);
     }
 
@@ -140,5 +147,13 @@ public class AddTaskModel implements Parcelable {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getIsTaskCompleted() {
+        return isTaskCompleted;
+    }
+
+    public void setIsTaskCompleted(String isTaskCompleted) {
+        this.isTaskCompleted = isTaskCompleted;
     }
 }

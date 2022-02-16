@@ -4,6 +4,7 @@ import static com.project.taskmanager.interfaces.HomeInteractiveListener.LEDGER_
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -34,6 +35,7 @@ import com.project.taskmanager.Utils;
 import com.project.taskmanager.databasehelper.DbHelper;
 import com.project.taskmanager.interfaces.Tags;
 import com.project.taskmanager.models.AddCategoryModel;
+import com.project.taskmanager.models.AddSubTaskModel;
 import com.project.taskmanager.models.AddTaskModel;
 
 import java.util.ArrayList;
@@ -320,6 +322,15 @@ public class AllTaskFrg extends BaseFragment {
             holder.mAccountNameTv.setText(ledger.getTaskName());
             holder.mDescTv.setText(ledger.getTaskDescription());
 
+            if(ledger.getIsTaskCompleted().equalsIgnoreCase("false")){
+                holder.mCompleteTaskTv.setText("Mark As Completed");
+                holder.mCompleteTaskTv.setTextColor(Color.parseColor("#DB4437"));
+            }else{
+                holder.mCompleteTaskTv.setText("Completed");
+                holder.mCompleteTaskTv.setTextColor(Color.parseColor("#689F38"));
+                holder.mAddSubTaskTv.setVisibility(View.GONE);
+            }
+
 
             holder.mIcon.setInitials(true);
             holder.mIcon.setShapeType(MaterialLetterIcon.Shape.CIRCLE);
@@ -370,6 +381,29 @@ public class AllTaskFrg extends BaseFragment {
             holder.mCompleteTaskTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    List<AddSubTaskModel> subTasksOfTasks = dbHelper.getSubTasksOfTasks(ledger.getId());
+                    Log.e("subTaskList", subTasksOfTasks.size() + "");
+                    if(subTasksOfTasks.size()==0){
+                        dbHelper.updateTaskCompleted(ledger,"true");
+                        getAllTasks();
+                    }else{
+                        for(int i=0;i<subTasksOfTasks.size();i++){
+                            if(subTasksOfTasks.get(i).getIsSubTaskCompleted().equalsIgnoreCase("false")){
+                                Toast.makeText(getActivity(), "Please complete all the subtasks first.", Toast.LENGTH_LONG).show();
+                                return;
+                            }else {
+                                if(ledger.getIsTaskCompleted().equalsIgnoreCase("true")){
+                                    Toast.makeText(getActivity(), "Task already completed", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    dbHelper.updateTaskCompleted(ledger,"true");
+                                    getAllTasks();
+                                }
+                            }
+                        }
+                    }
+
+
+
 
                 }
             });
