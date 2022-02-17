@@ -213,19 +213,11 @@ public class HomeFragment extends BaseFragment {
 
         @Override
         public TasksAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-
         {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recent_txn_design, parent, false);
             return new TasksAdapter.MyViewHolder(view);
         }
-        public boolean checkPermission() {
-            int result = ContextCompat.checkSelfPermission(getActivity(),
-                    WRITE_EXTERNAL_STORAGE);
-            int result1 = ContextCompat.checkSelfPermission(getActivity(),
-                    RECORD_AUDIO);
-            return result == PackageManager.PERMISSION_GRANTED &&
-                    result1 == PackageManager.PERMISSION_GRANTED;
-        }
+
 
         @Override
         public void onBindViewHolder(TasksAdapter.MyViewHolder holder, final int position) {
