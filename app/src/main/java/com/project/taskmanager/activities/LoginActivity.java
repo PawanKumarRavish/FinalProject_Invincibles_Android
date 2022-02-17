@@ -154,30 +154,7 @@ public class  LoginActivity extends WalletActivity implements View.OnClickListen
         parentList.add(totalBalance);
     }
 
-    private void saveDefaultTotalBalance() {
 
-        class SaveDefaultTotalBalance extends AsyncTask<Void, Void, Void> {
-
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                //adding to database
-                DatabaseClient.getInstance(LoginActivity.this).getAppDatabase()
-                        .totalBalanceDao()
-                        .insertList(parentList);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                Log.e("List", parentList + "");
-            }
-        }
-
-        SaveDefaultTotalBalance saveDefaultTotalBalance = new SaveDefaultTotalBalance();
-        saveDefaultTotalBalance.execute();
-    }
 
     @Override
     public void onClick(View v) {
@@ -325,7 +302,6 @@ public class  LoginActivity extends WalletActivity implements View.OnClickListen
                     if (!SharedPreference.isCount()) {
                         // Saving the default total balance
                         prepareDefaultTotalBalance();
-                        saveDefaultTotalBalance();
                         // Saving the default total balance
                         // for saving in total balance dao for only one time (Unique constraint error)
                         SharedPreference.setCount();

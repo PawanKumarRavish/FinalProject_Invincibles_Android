@@ -15,7 +15,6 @@ import com.project.taskmanager.R;
 import com.project.taskmanager.Utils;
 import com.project.taskmanager.databasehelper.DbHelper;
 import com.project.taskmanager.models.AddCategoryModel;
-import com.project.taskmanager.models.ModeModel;
 
 import java.util.ArrayList;
 
@@ -32,8 +31,6 @@ public class AddCategoryFrg extends BaseFragment {
     @BindView(R.id.mCategoryNameEt)
     EditText mCategoryNameEt;
 
-
-    ArrayList<ModeModel> modeList;
 
     @BindView(R.id.description_et)
     EditText mDescriptionEt;
@@ -111,15 +108,6 @@ public class AddCategoryFrg extends BaseFragment {
 
     }
 
-
-
-    private void prepareModeData() {
-        ModeModel modeModel = new ModeModel("Cash");
-        modeList.add(modeModel);
-
-        modeModel = new ModeModel("Bank");
-        modeList.add(modeModel);
-    }
 
 
     @Override

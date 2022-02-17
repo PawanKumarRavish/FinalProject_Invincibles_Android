@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.project.taskmanager.interfaces.Tags;
-import com.project.taskmanager.models.ModeModel;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -120,25 +119,5 @@ public class SharedPreference {
     }
 
 
-    public static void setBankAndModeList(ArrayList<ModeModel> bankAndModeList) {
-        SharedPreferences.Editor editor = mPref.edit();
-        Gson gson=new Gson();
-        Type type = new TypeToken<ArrayList<ModeModel>>() {}.getType();
-        String json=gson.toJson(bankAndModeList,type);
-        editor.putString(Tags.BANK_AND_MODE_LIST, json);
-        editor.commit();
-    }
-
-    public static ArrayList<ModeModel> getBankAndModeList() {
-        String json= mPref.getString(Tags.BANK_AND_MODE_LIST, "");
-        Gson gson=new Gson();
-        Type type = new TypeToken<ArrayList<ModeModel>>() {}.getType();
-        ArrayList<ModeModel> list = (ArrayList<ModeModel>) gson.fromJson(json, type);
-        if(list==null){
-            list= new ArrayList<>();
-            list.add(new ModeModel(Tags.CASH));
-        }
-        return list;
-    }
 
 }

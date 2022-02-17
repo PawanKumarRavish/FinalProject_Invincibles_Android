@@ -129,7 +129,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public long insertTask(String name,String des,String dueDate,String categoryName,int categoryId,String isTaskCompleted) {
+    public long insertTask(String name,String des,String dueDate,String categoryName,int categoryId,String isTaskCompleted,String recFileName) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -142,6 +142,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(AddTaskModel.COLUMN_CATEGORY_NAME, categoryName);
         values.put(AddTaskModel.COLUMN_CATEGORY_ID, categoryId);
         values.put(AddTaskModel.COLUMN_IS_TASK_COMPLETED, isTaskCompleted);
+        values.put(AddTaskModel.COLUMN_REC_FILE_NAME, recFileName);
 
         // insert row
         long id = db.insert(AddTaskModel.TABLE_NAME, null, values);
@@ -175,6 +176,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 note.setCategoryName(cursor.getString(cursor.getColumnIndex(AddTaskModel.COLUMN_CATEGORY_NAME)));
                 note.setCategoryId(cursor.getInt(cursor.getColumnIndex(AddTaskModel.COLUMN_CATEGORY_ID)));
                 note.setIsTaskCompleted(cursor.getString(cursor.getColumnIndex(AddTaskModel.COLUMN_IS_TASK_COMPLETED)));
+                note.setRecFileName(cursor.getString(cursor.getColumnIndex(AddTaskModel.COLUMN_REC_FILE_NAME)));
                 note.setTimestamp(cursor.getString(cursor.getColumnIndex(AddTaskModel.COLUMN_TIMESTAMP)));
                 note.setImage(cursor.getBlob(cursor.getColumnIndex(AddTaskModel.COLUMN_IMAGE)));
 

@@ -13,7 +13,8 @@
         <entry key="app/src/main/res/layout/activity_demo.xml" value="0.18020833333333333" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.18020833333333333" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.18020833333333333" />
-        <entry key="app/src/main/res/layout/activity_record_audio.xml" value="0.28125" />
+        <entry key="app/src/main/res/layout/activity_record_audio.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/add_account_layout.xml" value="0.18020833333333333" />
         <entry key="app/src/main/res/layout/add_expense_layout.xml" value="0.165" />
         <entry key="app/src/main/res/layout/add_income_layout.xml" value="0.25" />
         <entry key="app/src/main/res/layout/add_sub_task_layout.xml" value="0.125" />

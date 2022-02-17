@@ -1,34 +1,32 @@
 package com.project.taskmanager.fragments;
 
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.project.taskmanager.interfaces.HomeInteractiveListener.HOME_TAB;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.AsyncTask;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.ivbaranov.mli.MaterialLetterIcon;
 import com.project.taskmanager.R;
-import com.project.taskmanager.SharedPreference;
 import com.project.taskmanager.Utils;
-import com.project.taskmanager.activities.ExpenseHistoryActivity;
 import com.project.taskmanager.databasehelper.DbHelper;
-import com.project.taskmanager.db.DatabaseClient;
-import com.project.taskmanager.db.entities.AddIncome;
-import com.project.taskmanager.db.entities.TotalBalance;
-import com.project.taskmanager.interfaces.Tags;
 import com.project.taskmanager.models.AddCategoryModel;
 import com.project.taskmanager.models.AddTaskModel;
 
@@ -118,8 +116,16 @@ public class HomeFragment extends BaseFragment {
         mIncome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddTaskFrg homeFragment=new AddTaskFrg();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, homeFragment).addToBackStack(null).commit();
+                if(checkPermission()){
+                    AddTaskFrg homeFragment=new AddTaskFrg();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, homeFragment).addToBackStack(null).commit();
+
+                }else{
+                    requestPermission();
+
+                }
+
+
             }
         });
 
@@ -136,15 +142,6 @@ public class HomeFragment extends BaseFragment {
 
         getTotalCategories();
 
-        mExpenseImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(getActivity(), ExpenseHistoryActivity.class);
-                startActivity(intent);
-                //homeInteractiveListener.toExpenseHistory(ExpenseHistoryFrg.getInstance());
-            }
-        });
 
 
     }
@@ -257,6 +254,46 @@ public class HomeFragment extends BaseFragment {
 
 
             }
+        }
+    }
+
+
+
+    public boolean checkPermission() {
+        int read = ContextCompat.checkSelfPermission(getActivity(), READ_EXTERNAL_STORAGE);
+        int write = ContextCompat.checkSelfPermission(getActivity(), WRITE_EXTERNAL_STORAGE);
+        int camera = ContextCompat.checkSelfPermission(getActivity(), CAMERA);
+        int audio = ContextCompat.checkSelfPermission(getActivity(), RECORD_AUDIO);
+
+        return read == PackageManager.PERMISSION_GRANTED && write == PackageManager.PERMISSION_GRANTED
+                && camera == PackageManager.PERMISSION_GRANTED && audio == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new
+                String[]{READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE, CAMERA,RECORD_AUDIO}, 3000);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 3000:
+                if (grantResults.length > 0) {
+                    boolean read = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean write = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    boolean camera = grantResults[2] == PackageManager.PERMISSION_GRANTED;
+                    boolean audio = grantResults[3] == PackageManager.PERMISSION_GRANTED;
+
+                    if (read && write && camera && audio) {
+                        Toast.makeText(getActivity(), "Permission Granted", Toast.LENGTH_LONG).show();
+                        AddTaskFrg homeFragment=new AddTaskFrg();
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, homeFragment).addToBackStack(null).commit();
+                    } else {
+                        Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
         }
     }
 

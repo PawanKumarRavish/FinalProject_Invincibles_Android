@@ -1,8 +1,6 @@
 package com.project.taskmanager.fragments;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.Nullable;
@@ -27,13 +25,8 @@ import android.widget.Toast;
 
 import com.github.ivbaranov.mli.MaterialLetterIcon;
 import com.project.taskmanager.R;
-import com.project.taskmanager.SharedPreference;
 import com.project.taskmanager.databasehelper.DbHelper;
-import com.project.taskmanager.db.AppDatabase;
-import com.project.taskmanager.db.DatabaseClient;
 import com.project.taskmanager.db.entities.Ledger;
-import com.project.taskmanager.db.entities.TotalBalance;
-import com.project.taskmanager.interfaces.iTransactionStatus;
 import com.project.taskmanager.models.AddCategoryModel;
 
 import java.util.ArrayList;

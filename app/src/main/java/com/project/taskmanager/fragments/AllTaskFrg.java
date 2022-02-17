@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -44,6 +45,7 @@ import com.project.taskmanager.models.AddSubTaskModel;
 import com.project.taskmanager.models.AddTaskModel;
 import com.project.taskmanager.models.ImageModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -83,6 +85,7 @@ public class AllTaskFrg extends BaseFragment {
     int selectedCategoryId=0;
 
     ImagesAdapter imagesAdapter;
+    MediaPlayer player;
 
     private static AllTaskFrg mInstance;
     public static AllTaskFrg getInstance() {
@@ -345,6 +348,18 @@ public class AllTaskFrg extends BaseFragment {
                 }
             });
 
+            holder.mPlayAudio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String recFileName = ledger.getRecFileName();
+                    if(recFileName.equalsIgnoreCase("")){
+                        Toast.makeText(getActivity(), "No rec found", Toast.LENGTH_SHORT).show();
+                    }else{
+                        playRecording(recFileName);
+                    }
+                }
+            });
+
 
 
 
@@ -439,6 +454,30 @@ public class AllTaskFrg extends BaseFragment {
 
         }
 
+        private void playRecording(String recFileName) {
+             player = new MediaPlayer();
+            try {
+                player.setDataSource(recFileName);
+                player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        stopPlaying();
+                    }
+                });
+                player.prepare();
+                player.start();
+            } catch (IOException e) {
+                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        private void stopPlaying() {
+            if (player != null) {
+                player.release();
+                player = null;
+            }
+        }
+
 
         public void filter(String text) {
             List<AddTaskModel> filteredList = new ArrayList<>();
@@ -469,7 +508,7 @@ public class AllTaskFrg extends BaseFragment {
 
             TextView mAccountNameTv,mDescTv,mShowSubTaskTv,mAddSubTaskTv,mCompleteTaskTv;
             TextView mDeleteTv;
-            TextView mEditTv,mShowImages;
+            TextView mEditTv,mShowImages,mPlayAudio;
             MaterialLetterIcon mIcon;
             View mFrontLayout;
 
@@ -484,6 +523,7 @@ public class AllTaskFrg extends BaseFragment {
                 mCompleteTaskTv =  itemView.findViewById(R.id.mCompleteTask);
                 mShowSubTaskTv =  itemView.findViewById(R.id.mShowSubTaskTv);
                 mShowImages =  itemView.findViewById(R.id.mShowImages);
+                mPlayAudio =  itemView.findViewById(R.id.mPlayAudio);
                 mEditTv = (TextView) itemView.findViewById(R.id.edit_tv);
                 mIcon = (MaterialLetterIcon) itemView.findViewById(R.id.imageIcon);
                 mFrontLayout = (FrameLayout) itemView.findViewById(R.id.frontLayout);

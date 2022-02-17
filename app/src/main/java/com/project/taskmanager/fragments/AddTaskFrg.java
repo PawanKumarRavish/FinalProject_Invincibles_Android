@@ -1,7 +1,5 @@
 package com.project.taskmanager.fragments;
 
-import static android.Manifest.permission.RECORD_AUDIO;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.app.Activity.RESULT_OK;
 
 import android.app.DatePickerDialog;
@@ -11,13 +9,10 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,8 +31,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,17 +39,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.project.taskmanager.DataConvertor;
 import com.project.taskmanager.R;
 import com.project.taskmanager.Utils;
-import com.project.taskmanager.activities.DemoActivity;
 import com.project.taskmanager.databasehelper.DbHelper;
 import com.project.taskmanager.models.AddCategoryModel;
-import com.project.taskmanager.models.ModeModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -85,14 +76,15 @@ public class AddTaskFrg extends BaseFragment {
 
     @BindView(R.id.bottom_sheet)
     LinearLayout bottomSheet;
+
     @BindView(R.id.mStartRec)
     Button mStartRec;
+
     @BindView(R.id.mStopRec)
     Button mStopRec;
 
     private Calendar selectedCal;
 
-    ArrayList<ModeModel> modeList;
     Dialog alertDialog;
     Dialog alertDialog2;
     CategoriesAdapter categoriesAdapter;
@@ -125,12 +117,6 @@ public class AddTaskFrg extends BaseFragment {
     DbHelper dbHelper;
     List<AddCategoryModel> allCategories;
 
-    private String fileName = "";
-    String AudioSavePathInDevice = null;
-    MediaRecorder mediaRecorder;
-    Random random = new Random();
-
-
 
     Button mAddImagesBtn;
     ImageView imageSelected;
@@ -139,6 +125,10 @@ public class AddTaskFrg extends BaseFragment {
     byte[] imageArray = null;
     ImageAdapter adapter = new ImageAdapter();
     int selectType=-1;
+
+
+    private String fileName = "";
+    private MediaRecorder recorder;
 
 
     @Nullable
@@ -164,7 +154,6 @@ public class AddTaskFrg extends BaseFragment {
 
         allCategories = dbHelper.getAllCategories();
 
-        modeList = new ArrayList<>();
 
         alertDialog = new Dialog(getActivity());
         alertDialog2 = new Dialog(getActivity());
@@ -236,9 +225,13 @@ public class AddTaskFrg extends BaseFragment {
                         || mDueDateTv.getText().toString().trim().isEmpty()
                         || mCategoryTv.getText().toString().trim().isEmpty()) {
                     Toast.makeText(getActivity(), "Please add all the fields", Toast.LENGTH_SHORT).show();
-                } else {
+                } else if(selectType==-1){
+                    Toast.makeText(getActivity(), "Please select image to upload", Toast.LENGTH_SHORT).show();
+                }
+
+                else {
                     long primaryKey=dbHelper.insertTask(mTaskNameTv.getText().toString().trim(), mDescriptionEt.getText().toString().trim(),
-                            mDueDateTv.getText().toString().trim(), mCategoryTv.getText().toString(), selectedCategoryId, "false");
+                            mDueDateTv.getText().toString().trim(), mCategoryTv.getText().toString(), selectedCategoryId, "false",fileName);
                     Log.e("Key", primaryKey + "");
                     if (primaryKey == -1) {
                         Toast.makeText(getActivity(), "Data is not inserted in database", Toast.LENGTH_SHORT).show();
@@ -257,8 +250,6 @@ public class AddTaskFrg extends BaseFragment {
                             Toast.makeText(getActivity(), "Data Successfully inserted", Toast.LENGTH_SHORT).show();
                             HomeFragment homeFragment = new HomeFragment();
                             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, homeFragment).commit();
-
-
                         }
 
                     }
@@ -278,26 +269,28 @@ public class AddTaskFrg extends BaseFragment {
         mStartRec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(checkPermission()){
-                    fileName = CreateRandomAudioFileName(5) + "recording.3gp";
-                    AudioSavePathInDevice =
-                            Environment.getExternalStorageDirectory().getAbsolutePath() + "/" +
-                                    fileName;
-                    setMediaRecorderReady();
-                    try {
-                        mediaRecorder.prepare();
-                        mediaRecorder.start();
-                        mStartRec.setEnabled(false);
-                        mStopRec.setEnabled(true);
-                    } catch (IllegalStateException e) {
-                        Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                    Toast.makeText(getActivity(), "Recording started", Toast.LENGTH_LONG).show();
-                }else{
-                    requestPermission();
+
+                String uuid = UUID.randomUUID().toString();
+                fileName = getActivity().getExternalCacheDir().getAbsolutePath() + "/" + uuid + ".3gp";
+                Log.e("File Name", fileName);
+
+                recorder = new MediaRecorder();
+                recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                recorder.setOutputFile(fileName);
+                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+                try {
+                    recorder.prepare();
+                    mStartRec.setEnabled(false);
+                    mStopRec.setEnabled(true);
+                } catch (IOException e) {
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+
+                recorder.start();
+                Toast.makeText(getActivity(), "Recording started", Toast.LENGTH_LONG).show();
+
 
             }
         });
@@ -306,10 +299,11 @@ public class AddTaskFrg extends BaseFragment {
             @Override
             public void onClick(View v) {
                 try {
-                    mediaRecorder.stop();
-                    Log.e("Saved Path",AudioSavePathInDevice);
+                    recorder.stop();
+                    Log.e("Saved Path",fileName);
                     mStopRec.setEnabled(false);
                     mStartRec.setEnabled(true);
+                    Toast.makeText(getActivity(), "Recording Stopped", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
                 }
@@ -349,49 +343,6 @@ public class AddTaskFrg extends BaseFragment {
 
     }
 
-    public void setMediaRecorderReady() {
-        mediaRecorder = new MediaRecorder();
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        mediaRecorder.setOutputFile(AudioSavePathInDevice);
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(getActivity(), new
-                String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, 3000);
-    }
-
-
-    public boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getActivity(),
-                WRITE_EXTERNAL_STORAGE);
-        int result1 = ContextCompat.checkSelfPermission(getActivity(),
-                RECORD_AUDIO);
-        return result == PackageManager.PERMISSION_GRANTED &&
-                result1 == PackageManager.PERMISSION_GRANTED;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 3000:
-                if (grantResults.length > 0) {
-                    boolean StoragePermission = grantResults[0] ==
-                            PackageManager.PERMISSION_GRANTED;
-                    boolean RecordPermission = grantResults[1] ==
-                            PackageManager.PERMISSION_GRANTED;
-
-                    if (StoragePermission && RecordPermission) {
-                        Toast.makeText(getActivity(), "Permission Granted", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;
-        }
-    }
 
 
     private void setCategoriesAdapter(List<AddCategoryModel> allCategories) {
@@ -434,20 +385,6 @@ public class AddTaskFrg extends BaseFragment {
         homeInteractiveListener.setToolBarTitle(getString(R.string.add_task));
         homeInteractiveListener.toggleCalenderVisiblity(View.GONE);
         homeInteractiveListener.toggleTabVisiblity(View.GONE);
-    }
-
-
-    public String CreateRandomAudioFileName(int string) {
-        String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
-        StringBuilder stringBuilder = new StringBuilder(string);
-        int i = 0;
-        while (i < string) {
-            stringBuilder.append(RandomAudioFileName.
-                    charAt(random.nextInt(RandomAudioFileName.length())));
-
-            i++;
-        }
-        return stringBuilder.toString();
     }
 
 

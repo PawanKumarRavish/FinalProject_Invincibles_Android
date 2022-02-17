@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -23,12 +22,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.tabs.TabLayout;
 import com.project.taskmanager.R;
-import com.project.taskmanager.fragments.AddCategoryFrg;
 import com.project.taskmanager.fragments.AllCategoriesFrg;
 import com.project.taskmanager.fragments.AllTaskFrg;
 import com.project.taskmanager.fragments.HomeFragment;
 import com.project.taskmanager.fragments.Profile;
-import com.project.taskmanager.models.ModeModel;
 
 import java.util.ArrayList;
 
@@ -37,7 +34,6 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends WalletActivity implements View.OnClickListener {
 
-    ArrayList<ModeModel> modeList;
 
     TabLayout tabLayout;
     TextView mToolbarTitle;
@@ -62,7 +58,6 @@ public class HomeActivity extends WalletActivity implements View.OnClickListener
         mBottomNavView.getMenu().clear(); //clear old inflated items.
         mBottomNavView.inflateMenu(R.menu.bottom_nav);
 
-        modeList = new ArrayList<>();
 
         mToolbarTitle = (TextView) findViewById(R.id.mToolbarTitle);
         mBackArrow = findViewById(R.id.mBackArrow);

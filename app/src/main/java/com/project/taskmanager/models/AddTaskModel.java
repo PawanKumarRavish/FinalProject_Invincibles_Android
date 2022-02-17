@@ -11,6 +11,7 @@ public class AddTaskModel implements Parcelable {
     private String  categoryName;
     private int  categoryId;
     private String  isTaskCompleted;
+    private String  recFileName;
     private byte[] image;
     private String timestamp;
 
@@ -22,6 +23,7 @@ public class AddTaskModel implements Parcelable {
     public static final String COLUMN_CATEGORY_NAME = "category_name";
     public static final String COLUMN_CATEGORY_ID = "category_id";
     public static final String COLUMN_IS_TASK_COMPLETED = "task_completed";
+    public static final String COLUMN_REC_FILE_NAME = "task_recfilename";
     public static final String COLUMN_IMAGE = "image";
     public static final String COLUMN_TIMESTAMP = "timestamp";
 
@@ -35,12 +37,13 @@ public class AddTaskModel implements Parcelable {
                     + COLUMN_CATEGORY_NAME + " TEXT,"
                     + COLUMN_CATEGORY_ID + " INTEGER,"
                     + COLUMN_IS_TASK_COMPLETED + " TEXT,"
+                    + COLUMN_REC_FILE_NAME + " TEXT,"
                     + COLUMN_IMAGE + " BLOB,"
                     + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP"
                     + ")";
 
     public AddTaskModel(int id, String taskName, String taskDescription, String taskDueDate, String categoryName,
-                        int categoryId,String isTaskCompleted,byte[] image,String timestamp) {
+                        int categoryId,String isTaskCompleted,String recFileName,byte[] image,String timestamp) {
         this.id = id;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
@@ -49,6 +52,7 @@ public class AddTaskModel implements Parcelable {
         this.categoryId = categoryId;
         this.isTaskCompleted = isTaskCompleted;
         this.isTaskCompleted = isTaskCompleted;
+        this.recFileName = recFileName;
         this.image = image;
         this.timestamp = timestamp;
     }
@@ -66,6 +70,7 @@ public class AddTaskModel implements Parcelable {
         categoryName = in.readString();
         categoryId = in.readInt();
         isTaskCompleted = in.readString();
+        recFileName = in.readString();
         image = in.createByteArray();
         timestamp = in.readString();
     }
@@ -160,6 +165,7 @@ public class AddTaskModel implements Parcelable {
         dest.writeString(categoryName);
         dest.writeInt(categoryId);
         dest.writeString(isTaskCompleted);
+        dest.writeString(recFileName);
         dest.writeByteArray(image);
         dest.writeString(timestamp);
     }
@@ -170,5 +176,13 @@ public class AddTaskModel implements Parcelable {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public String getRecFileName() {
+        return recFileName;
+    }
+
+    public void setRecFileName(String recFileName) {
+        this.recFileName = recFileName;
     }
 }

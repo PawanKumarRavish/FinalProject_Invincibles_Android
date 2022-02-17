@@ -152,22 +152,33 @@
 
 
                         <LinearLayout
+                            android:weightSum="2"
                             android:gravity="center"
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                             <TextView
+                                android:layout_weight="1"
                                 android:id="@+id/mShowImages"
                                 android:padding="7dp"
                                 android:textStyle="bold"
                                 android:textColor="@android:color/black"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
                                 android:text="Show Images"
                                 android:textSize="14sp" />
 
+                            <TextView
+                                android:layout_weight="1"
+                                android:id="@+id/mPlayAudio"
+                                android:padding="7dp"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/black"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:text="Play Audio"
+                                android:textSize="14sp" />
 
 
                         </LinearLayout>

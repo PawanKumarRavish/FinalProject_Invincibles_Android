@@ -39,7 +39,6 @@
         <activity android:name="com.project.taskmanager.activities.ConfirmPinActivity" />
         <activity android:name="com.project.taskmanager.activities.HomeActivity" />
         <activity android:name="com.project.taskmanager.activities.BaseActivity" />
-        <activity android:name="com.project.taskmanager.activities.ExpenseHistoryActivity" />
         <activity android:name="com.project.taskmanager.activities.CurrencyActivity" />
         <activity
             android:name="com.project.taskmanager.activities.DemoActivity"
