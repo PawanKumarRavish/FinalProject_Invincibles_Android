@@ -34,7 +34,6 @@
                     android:textSize="14sp" />
 
                 <EditText
-                    android:visibility="gone"
                     android:fontFamily="@font/helvetica_condensed_bold"
                     android:id="@+id/mSubTaskNameTv"
                     android:textSize="20sp"
