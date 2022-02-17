@@ -81,15 +81,15 @@ public class HomeActivity extends WalletActivity implements View.OnClickListener
                     getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, homeFragment).commit();
                 } else if (item.getItemId() == R.id.bottom_categories) {
 
-                    AllCategoriesFrg ledgerFrg =new AllCategoriesFrg();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, ledgerFrg).commit();
+                    AllCategoriesFrg allCategoriesFrg =new AllCategoriesFrg();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, allCategoriesFrg).addToBackStack(null).commit();
 
                 } else if (item.getItemId() == R.id.bottom_alltasks) {
                     AllTaskFrg allTaskFrg =new AllTaskFrg();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, allTaskFrg).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, allTaskFrg).addToBackStack(null).commit();
                 } else if (item.getItemId() == R.id.bottom_profile) {
                     Profile allCategoriesFrg=new Profile();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, allCategoriesFrg).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, allCategoriesFrg).addToBackStack(null).commit();
                 }
                 return true;
             }
