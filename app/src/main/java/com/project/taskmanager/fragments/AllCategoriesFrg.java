@@ -266,7 +266,7 @@ public class AllCategoriesFrg extends BaseFragment {
 
         public void filter(String text) {
             List<AddCategoryModel> filteredList = new ArrayList<>();
-            for (AddCategoryModel item : childFeedList) {
+            for (AddCategoryModel item : allCategoriesList) {
                 Log.e("Item", item.getCategoryName());
                 if (item.getCategoryName().toLowerCase().contains(text.toLowerCase())) {
                     filteredList.add(item);
@@ -275,6 +275,7 @@ public class AllCategoriesFrg extends BaseFragment {
             this.childFeedList=filteredList;
             notifyDataSetChanged();
         }
+
 
         @Override
         public int getItemCount() {

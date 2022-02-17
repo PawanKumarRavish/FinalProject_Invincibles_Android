@@ -481,9 +481,9 @@ public class AllTaskFrg extends BaseFragment {
 
         public void filter(String text) {
             List<AddTaskModel> filteredList = new ArrayList<>();
-            for (AddTaskModel item : childFeedList) {
+            for (AddTaskModel item : allTasks) {
                 Log.e("Item", item.getTaskName());
-                if (item.getCategoryName().toLowerCase().contains(text.toLowerCase())) {
+                if (item.getTaskName().toLowerCase().contains(text.toLowerCase())) {
                     filteredList.add(item);
                 }
             }
