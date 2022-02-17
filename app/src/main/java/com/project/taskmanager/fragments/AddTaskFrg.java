@@ -302,19 +302,19 @@ public class AddTaskFrg extends BaseFragment {
             }
         });
 
-//        mStopRec.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                try {
-//                    mediaRecorder.stop();
-//                    Log.e("Saved Path",AudioSavePathInDevice);
-//                    mStopRec.setEnabled(false);
-//                    mStartRec.setEnabled(true);
-//                } catch (Exception e) {
-//                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
+        mStopRec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mediaRecorder.stop();
+                    Log.e("Saved Path",AudioSavePathInDevice);
+                    mStopRec.setEnabled(false);
+                    mStartRec.setEnabled(true);
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         mAddImagesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
